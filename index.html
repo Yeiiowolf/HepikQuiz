@@ -3,21 +3,21 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Általános műveltségi kvíz – 30 kérdés</title>
+  <title>Hepik 2026 kvíz</title>
   <style>
     :root {
-      --ink: #15243b;
-      --muted: #64748b;
+      --ink: #19352b;
+      --muted: #60756a;
       --paper: #ffffff;
-      --bg1: #eef2ff;
-      --bg2: #f0fdfa;
-      --blue: #3157d5;
-      --blue-dark: #2340aa;
-      --green: #12805c;
+      --bg1: #eaf5ea;
+      --bg2: #f7f8ed;
+      --blue: #2e6b45;
+      --blue-dark: #1f5033;
+      --green: #2d8a57;
       --red: #c2414b;
       --amber: #f59e0b;
-      --line: #dce3ef;
-      --shadow: 0 22px 70px rgba(25, 48, 92, .16);
+      --line: #d8e6d8;
+      --shadow: 0 22px 70px rgba(35, 83, 52, .16);
     }
 
     * { box-sizing: border-box; }
@@ -27,8 +27,8 @@
       color: var(--ink);
       font: 16px/1.5 Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       background:
-        radial-gradient(circle at 10% 12%, rgba(49,87,213,.16), transparent 28rem),
-        radial-gradient(circle at 90% 88%, rgba(18,128,92,.14), transparent 30rem),
+        radial-gradient(circle at 10% 12%, rgba(46,107,69,.17), transparent 28rem),
+        radial-gradient(circle at 90% 88%, rgba(133,169,91,.17), transparent 30rem),
         linear-gradient(135deg, var(--bg1), var(--bg2));
       display: grid;
       place-items: center;
@@ -66,7 +66,7 @@
       margin: 0 0 28px;
     }
     .rule {
-      background: #f7f9fc;
+      background: #f2f8f2;
       border: 1px solid var(--line);
       border-radius: 16px;
       padding: 14px;
@@ -96,7 +96,7 @@
     .primary { color: white; background: var(--blue); width: 100%; margin-top: 14px; }
     .primary:hover { background: var(--blue-dark); }
     .primary:active, .secondary:active { transform: translateY(1px); }
-    .secondary { color: var(--blue); background: #edf1ff; }
+    .secondary { color: var(--blue); background: #e7f1e7; }
     .notice { color: var(--muted); font-size: .82rem; margin: 14px 0 0; text-align: center; }
 
     .quiz-head { display: grid; grid-template-columns: 1fr auto; gap: 18px; align-items: center; margin-bottom: 18px; }
@@ -104,7 +104,7 @@
     .timer {
       width: 68px; height: 68px; border-radius: 50%;
       display: grid; place-items: center;
-      background: conic-gradient(var(--blue) var(--timer), #e8edf5 0);
+      background: conic-gradient(var(--blue) var(--timer), #e1eee3 0);
       position: relative;
       font-size: 1.25rem; font-weight: 900;
       transition: background .2s;
@@ -112,8 +112,8 @@
     .timer::before { content: ""; position: absolute; inset: 7px; background: white; border-radius: 50%; }
     .timer span { position: relative; z-index: 1; }
     .timer.urgent { color: var(--red); background: conic-gradient(var(--red) var(--timer), #f5e6e8 0); }
-    .progress { height: 8px; background: #e8edf5; border-radius: 999px; overflow: hidden; margin-bottom: 30px; }
-    .progress > div { height: 100%; background: linear-gradient(90deg, var(--blue), #5d7bea); border-radius: inherit; transition: width .3s; }
+    .progress { height: 8px; background: #e1eee3; border-radius: 999px; overflow: hidden; margin-bottom: 30px; }
+    .progress > div { height: 100%; background: linear-gradient(90deg, var(--blue), #5e9a70); border-radius: inherit; transition: width .3s; }
     .question { min-height: 78px; margin-bottom: 24px; }
     .answers { display: grid; gap: 11px; }
     .answer {
@@ -123,10 +123,10 @@
       text-align: left; font-weight: 750;
       transition: border-color .15s, background .15s, transform .12s;
     }
-    .answer:hover { border-color: #9dadde; background: #f7f9ff; transform: translateY(-1px); }
+    .answer:hover { border-color: #8bb59a; background: #f0f8f0; transform: translateY(-1px); }
     .answer-key {
       width: 32px; height: 32px; border-radius: 9px; display: grid; place-items: center;
-      background: #edf1ff; color: var(--blue); font-weight: 900;
+      background: #e7f1e7; color: var(--blue); font-weight: 900;
     }
     .typed-row { display: grid; grid-template-columns: 1fr auto; gap: 10px; }
     .typed-row .primary { width: auto; margin: 0; }
@@ -134,7 +134,7 @@
     .result-ring {
       width: 176px; height: 176px; border-radius: 50%; margin: 26px auto 20px;
       display: grid; place-items: center;
-      background: conic-gradient(var(--green) var(--score), #e7edf0 0);
+      background: conic-gradient(var(--green) var(--score), #e1ece3 0);
       position: relative;
     }
     .result-ring::before { content: ""; position: absolute; inset: 13px; background: white; border-radius: 50%; }
@@ -148,7 +148,7 @@
     dialog { border: 0; padding: 0; border-radius: 22px; width: min(760px, calc(100% - 28px)); max-height: 88vh; box-shadow: var(--shadow); }
     dialog::backdrop { background: rgba(16, 28, 48, .62); backdrop-filter: blur(4px); }
     .dialog-head { position: sticky; top: 0; background: white; display: flex; align-items: center; justify-content: space-between; padding: 22px 24px; border-bottom: 1px solid var(--line); z-index: 2; }
-    .close { border: 0; border-radius: 10px; width: 38px; height: 38px; background: #f0f3f8; font-size: 1.3rem; }
+    .close { border: 0; border-radius: 10px; width: 38px; height: 38px; background: #edf3ed; font-size: 1.3rem; }
     .review { padding: 8px 24px 24px; }
     .review-item { padding: 18px 0; border-bottom: 1px solid var(--line); }
     .review-item:last-child { border: 0; }
@@ -171,17 +171,17 @@
 <body>
   <main class="app">
     <section id="startScreen" class="card">
-      <p class="eyebrow">30 kérdés • 10 másodperc / kérdés</p>
-      <h1>Általános műveltségi kvíz</h1>
-      <p class="lead">Tedd próbára a tudásod! A kvíz 27 feleletválasztós és 3 rövid, beírandó kérdésből áll.</p>
+      <p class="eyebrow">33 kérdés • 15 másodperc / kérdés</p>
+      <h1>Hepik 2026 kvíz</h1>
+      <p class="lead">Tedd próbára a tudásod! 30 A–D kérdés és 3 beírós találós kérdés vár rád.</p>
       <div class="rules">
         <div class="rule"><span>30</span>kérdés összesen</div>
-        <div class="rule"><span>10 mp</span>minden kérdésre</div>
+        <div class="rule"><span>15 mp</span>minden kérdésre</div>
         <div class="rule"><span>1 pont</span>helyes válaszonként</div>
       </div>
       <form id="startForm" autocomplete="off">
-        <label for="playerName">Játékos neve</label>
-        <input id="playerName" type="text" maxlength="50" placeholder="Írd be a neved" required>
+        <label for="teamName">Csapat neve</label>
+        <input id="teamName" type="text" maxlength="50" placeholder="Írd be a csapat nevét" required>
         <button class="primary" type="submit">Kvíz indítása</button>
       </form>
       <p class="notice">A válaszok véglegesek. Frissítés után a kvíz ugyanonnan folytatódik.</p>
@@ -227,40 +227,47 @@
     "use strict";
 
     const QUESTIONS = [
-      { q: "Melyik Magyarország legnagyobb tava?", options: ["Velencei-tó", "Balaton", "Fertő-tó", "Tisza-tó"], answer: 1 },
-      { q: "Ki írta A Pál utcai fiúk című regényt?", options: ["Jókai Mór", "Móricz Zsigmond", "Molnár Ferenc", "Gárdonyi Géza"], answer: 2 },
-      { q: "Melyik bolygó van a legközelebb a Naphoz?", options: ["Vénusz", "Mars", "Merkúr", "Föld"], answer: 2 },
-      { q: "Melyik évben volt a mohácsi csata?", options: ["1456", "1526", "1606", "1848"], answer: 1 },
-      { q: "Mi Ausztrália fővárosa?", options: ["Sydney", "Melbourne", "Perth", "Canberra"], answer: 3 },
-      { q: "Hány fokos egy derékszög?", options: ["45°", "60°", "90°", "180°"], answer: 2 },
-      { q: "Melyik elem vegyjele az Au?", options: ["Ezüst", "Arany", "Alumínium", "Argon"], answer: 1 },
-      { q: "Ki festette a Mona Lisát?", options: ["Michelangelo", "Raffaello", "Leonardo da Vinci", "Vincent van Gogh"], answer: 2 },
-      { q: "Melyik folyó folyik keresztül Budapesten?", options: ["Tisza", "Dráva", "Rába", "Duna"], answer: 3 },
-      { q: "Hány kontinens van a leggyakoribb földrajzi felosztás szerint?", options: ["5", "6", "7", "8"], answer: 2 },
-      { q: "Melyik szerv pumpálja a vért az emberi testben?", options: ["Tüdő", "Máj", "Szív", "Vese"], answer: 2 },
-      { q: "Mi Japán pénzneme?", options: ["Jüan", "Jen", "Von", "Rúpia"], answer: 1 },
-      { q: "Melyik ország zászlaján látható juharlevél?", options: ["Kanada", "Norvégia", "Svájc", "Ausztria"], answer: 0 },
-      { q: "Ki volt Magyarország első királya?", options: ["Szent László", "Könyves Kálmán", "Szent István", "IV. Béla"], answer: 2 },
-      { q: "Melyik gázból van a legtöbb a Föld légkörében?", options: ["Oxigén", "Szén-dioxid", "Hidrogén", "Nitrogén"], answer: 3 },
-      { q: "Mi a világ legnagyobb óceánja?", options: ["Atlanti-óceán", "Indiai-óceán", "Csendes-óceán", "Jeges-tenger"], answer: 2 },
-      { q: "Melyik hangszernek van általában 88 billentyűje?", options: ["Hegedű", "Zongora", "Fuvola", "Gitár"], answer: 1 },
-      { q: "Melyik állat a legnagyobb ma élő szárazföldi emlős?", options: ["Zsiráf", "Orrszarvú", "Afrikai elefánt", "Víziló"], answer: 2 },
-      { q: "Ki írta a Himnusz szövegét?", options: ["Vörösmarty Mihály", "Petőfi Sándor", "Arany János", "Kölcsey Ferenc"], answer: 3 },
-      { q: "Hány játékos van egyszerre a pályán egy labdarúgócsapatban?", options: ["9", "10", "11", "12"], answer: 2 },
-      { q: "Melyik országban található a gízai nagy piramis?", options: ["Görögország", "Egyiptom", "Mexikó", "India"], answer: 1 },
-      { q: "Melyik nyelven írt eredetileg William Shakespeare?", options: ["Francia", "Latin", "Angol", "Német"], answer: 2 },
-      { q: "Mi a víz kémiai képlete?", options: ["CO₂", "O₂", "NaCl", "H₂O"], answer: 3 },
-      { q: "Melyik a legkisebb prímszám?", options: ["0", "1", "2", "3"], answer: 2 },
-      { q: "Melyik városban található a Colosseum?", options: ["Athén", "Róma", "Párizs", "Madrid"], answer: 1 },
-      { q: "Melyik magyar találmány kötődik Bíró László József nevéhez?", options: ["Golyóstoll", "Gyufa", "Rubik-kocka", "Telefonközpont"], answer: 0 },
-      { q: "Mennyi 12 × 8?", options: ["86", "92", "96", "108"], answer: 2 },
-      { q: "Írd be Magyarország fővárosát!", type: "text", accepted: ["budapest"], display: "Budapest" },
-      { q: "Írd be a Naprendszer legnagyobb bolygójának nevét!", type: "text", accepted: ["jupiter"], display: "Jupiter" },
-      { q: "Írd be, hány oldala van egy hatszögnek!", type: "text", accepted: ["6", "hat"], display: "6 (hat)" }
+      // 1–10: erdők és fák
+      { q: "Melyik fa termése a makk?", options: ["Tölgy", "Nyír", "Fenyő", "Bükk"], answer: 0 },
+      { q: "Melyik a világ legmagasabb fafaja?", options: ["Óriás mamutfenyő", "Eukaliptusz", "Parti mamutfenyő", "Bükk"], answer: 2 },
+      { q: "Melyik erdő élőlényeiről híres a „gombák királya”, a vargánya?", options: ["Sivatag", "Lombos erdő", "Korallzátony", "Jégmező"], answer: 1 },
+      { q: "Melyik fa kérge fehér, fekete repedésekkel?", options: ["Nyír", "Akác", "Dió", "Fűz"], answer: 0 },
+      { q: "Mi védi leginkább a fenyő tűleveleit a párologtatástól?", options: ["Vastag viaszréteg", "Nagy virágok", "Puha szőrök", "Sós víz"], answer: 0 },
+      { q: "Melyik erdei állat épít gátakat patakokon?", options: ["Hód", "Sündisznó", "Őz", "Borz"], answer: 0 },
+      { q: "Melyik évszakban hullatja le a legtöbb lombos fa a leveleit?", options: ["Tavasszal", "Nyáron", "Ősszel", "Télen"], answer: 2 },
+      { q: "Melyik növényből készülhet parafa?", options: ["Paratölgy", "Kaktusz", "Bambusz", "Levendula"], answer: 0 },
+      { q: "Mi az évgyűrűk segítségével leginkább meghatározható?", options: ["A fa kora", "A fa magassága", "A talaj színe", "A levelek íze"], answer: 0 },
+      { q: "Melyik állat gyakran rágja le a fiatal fák kérgét?", options: ["Őz", "Gólya", "Vidra", "Sirály"], answer: 0 },
+      // 11–20: vicces, könnyed
+      { q: "Mit mond a fal, amikor nekimegyünk?", options: ["Semmit, de megjegyez", "Jó étvágyat!", "Miau!", "Köszönöm a táncot!"], answer: 0 },
+      { q: "Melyik állat visel képzeletben mindig cilindert?", options: ["Zsiráf", "Krokodil", "Pingvin", "Aranyhal"], answer: 2 },
+      { q: "Miért nem lehet a biciklit titokban tartani?", options: ["Mert beszél", "Mert mindig van kereke a dolognak", "Mert elrepül", "Mert csörög a farka"], answer: 1 },
+      { q: "Melyik étel neve hangzik úgy, mintha egy kis állat szaladna?", options: ["Rántott hús", "Borsófőzelék", "Uborkasaláta", "Palacsinta"], answer: 3 },
+      { q: "Melyik szuperképesség lenne a leghasznosabb egy elalvós reggelen?", options: ["Láthatatlanság a reggeli előtt", "Teleportálás az ágyból a buszra", "Repülés fogmosás közben", "Halakkal beszélés"], answer: 1 },
+      { q: "Mit csinál a banán, amikor viccet mesél?", options: ["Megugatja a közönséget", "Levelet ír", "Elhasal", "Elbújik a hóban"], answer: 2 },
+      { q: "Melyik lenne a legfurcsább háziállat egy lakásban?", options: ["Egy hörcsög", "Egy aranyhal", "Egy macska", "Egy zsiráf"], answer: 3 },
+      { q: "Melyik hangzik leginkább egy kitalált varázsige végének?", options: ["Paprikás krumpli", "Jó reggelt", "Abraka-dabra", "Hosszú hétvége"], answer: 2 },
+      { q: "Melyik tárgyat keresik az emberek gyakran akkor is, amikor a kezükben van?", options: ["A hűtőt", "A telefont", "A kanapét", "A párnát"], answer: 1 },
+      { q: "Mi lenne a teknős kedvenc sportja?", options: ["Forma–1", "Síugrás", "Gyorskorcsolya", "Lassított akadályfutás"], answer: 3 },
+      // 21–30: meglepő érdekességek
+      { q: "Melyik állatnak van három szíve?", options: ["Elefánt", "Pillangó", "Polip", "Pingvin"], answer: 2 },
+      { q: "Melyik gyümölcs botanikailag bogyótermés?", options: ["Eper", "Banán", "Málna", "Cseresznye"], answer: 1 },
+      { q: "Melyik állat nem tud hátrafelé sétálni?", options: ["Macska", "Rák", "Ló", "Kenguru"], answer: 3 },
+      { q: "Melyik bolygón egy nap hosszabb, mint egy év?", options: ["Föld", "Mars", "Vénusz", "Jupiter"], answer: 2 },
+      { q: "Melyik élőlénynek nincs agya, mégis képes tanulni egyszerű útvonalakat?", options: ["Kék bálna", "Nyálkagomba", "Sas", "Gyík"], answer: 1 },
+      { q: "Melyik állat ujjlenyomata hasonlíthat az emberéhez?", options: ["Teknős", "Pingvin", "Béka", "Koala"], answer: 3 },
+      { q: "Melyik országban található a világ legrégebbi ismert folyamatosan működő szállodája?", options: ["Brazília", "Japán", "Kanada", "Egyiptom"], answer: 1 },
+      { q: "Melyik testrészünkben található a testünk legkisebb csontja?", options: ["Lábfej", "Ujj", "Fül", "Orr"], answer: 2 },
+      { q: "Melyik állat vére kékes színű a réz alapú hemocianin miatt?", options: ["Kutya", "Zebra", "Nyúl", "Patkórák"], answer: 3 },
+      { q: "Melyik tárgyat találták fel hamarabb?", options: ["A villanykörtét", "A fogkefét", "A rádiót", "A mobiltelefont"], answer: 1 },
+      // 31–33: beírós találós kérdések
+      { q: "Találós kérdés: Mi az, ami reggel négy lábon, délben két lábon, este pedig három lábon jár? Írd be a választ!", type: "text", accepted: ["ember", "az ember"], display: "Az ember" },
+      { q: "Találós kérdés: Mi az, ami minél többet veszel el belőle, annál nagyobb lesz? Írd be a választ!", type: "text", accepted: ["gödör", "godor", "egy gödör", "egy godor"], display: "Egy gödör" },
+      { q: "Találós kérdés: Mi az, aminek van szeme, de nem lát? Írd be a választ!", type: "text", accepted: ["tű", "tu", "tűnek", "a tű"], display: "A tű" }
     ];
 
-    const STORAGE_KEY = "hu-altalanos-kviz-v1";
-    const LIMIT_MS = 10000;
+    const STORAGE_KEY = "hu-altalanos-kviz-v2";
+    const LIMIT_MS = 15000;
     const letters = ["A", "B", "C", "D"];
     let state = loadState();
     let timerId = null;
@@ -317,7 +324,7 @@
 
     el("startForm").addEventListener("submit", event => {
       event.preventDefault();
-      const name = el("playerName").value.trim();
+      const name = el("teamName").value.trim();
       if (!name) return;
       state = freshState(name);
       saveState();
@@ -452,7 +459,7 @@
     });
     el("copyBtn").addEventListener("click", async () => {
       const score = state.answers.filter(a => a.correct).length;
-      const text = `${state.name} – Általános műveltségi kvíz: ${score}/${QUESTIONS.length} pont (${Math.round(score / QUESTIONS.length * 100)}%).`;
+      const text = `${state.name} – Hepik 2026 kvíz: ${score}/${QUESTIONS.length} pont (${Math.round(score / QUESTIONS.length * 100)}%).`;
       try {
         await navigator.clipboard.writeText(text);
         el("copyBtn").textContent = "Eredmény kimásolva ✓";
