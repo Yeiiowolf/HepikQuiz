@@ -1,0 +1,474 @@
+<!doctype html>
+<html lang="hu">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Általános műveltségi kvíz – 30 kérdés</title>
+  <style>
+    :root {
+      --ink: #15243b;
+      --muted: #64748b;
+      --paper: #ffffff;
+      --bg1: #eef2ff;
+      --bg2: #f0fdfa;
+      --blue: #3157d5;
+      --blue-dark: #2340aa;
+      --green: #12805c;
+      --red: #c2414b;
+      --amber: #f59e0b;
+      --line: #dce3ef;
+      --shadow: 0 22px 70px rgba(25, 48, 92, .16);
+    }
+
+    * { box-sizing: border-box; }
+    html, body { min-height: 100%; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      font: 16px/1.5 Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at 10% 12%, rgba(49,87,213,.16), transparent 28rem),
+        radial-gradient(circle at 90% 88%, rgba(18,128,92,.14), transparent 30rem),
+        linear-gradient(135deg, var(--bg1), var(--bg2));
+      display: grid;
+      place-items: center;
+      padding: 24px;
+    }
+
+    button, input { font: inherit; }
+    button { cursor: pointer; }
+    .app { width: min(820px, 100%); }
+    .card {
+      background: rgba(255,255,255,.94);
+      border: 1px solid rgba(255,255,255,.9);
+      border-radius: 28px;
+      box-shadow: var(--shadow);
+      padding: clamp(24px, 5vw, 48px);
+      backdrop-filter: blur(12px);
+    }
+    .hidden { display: none !important; }
+    .eyebrow {
+      color: var(--blue);
+      font-size: .78rem;
+      font-weight: 800;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      margin: 0 0 8px;
+    }
+    h1, h2 { margin: 0; line-height: 1.14; }
+    h1 { font-size: clamp(2rem, 6vw, 3.4rem); letter-spacing: -.045em; }
+    h2 { font-size: clamp(1.45rem, 4vw, 2rem); letter-spacing: -.025em; }
+    .lead { color: var(--muted); font-size: 1.06rem; margin: 18px 0 26px; }
+    .rules {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin: 0 0 28px;
+    }
+    .rule {
+      background: #f7f9fc;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 14px;
+      font-weight: 700;
+      font-size: .9rem;
+    }
+    .rule span { display: block; color: var(--blue); font-size: 1.25rem; margin-bottom: 3px; }
+    label { display: block; font-weight: 800; margin-bottom: 8px; }
+    input[type="text"] {
+      width: 100%;
+      border: 2px solid var(--line);
+      border-radius: 14px;
+      padding: 14px 16px;
+      color: var(--ink);
+      background: white;
+      outline: none;
+      transition: border-color .18s, box-shadow .18s;
+    }
+    input[type="text"]:focus { border-color: var(--blue); box-shadow: 0 0 0 4px rgba(49,87,213,.12); }
+    .primary, .secondary {
+      border: 0;
+      border-radius: 14px;
+      padding: 14px 20px;
+      font-weight: 800;
+      transition: transform .12s, background .16s;
+    }
+    .primary { color: white; background: var(--blue); width: 100%; margin-top: 14px; }
+    .primary:hover { background: var(--blue-dark); }
+    .primary:active, .secondary:active { transform: translateY(1px); }
+    .secondary { color: var(--blue); background: #edf1ff; }
+    .notice { color: var(--muted); font-size: .82rem; margin: 14px 0 0; text-align: center; }
+
+    .quiz-head { display: grid; grid-template-columns: 1fr auto; gap: 18px; align-items: center; margin-bottom: 18px; }
+    .meta { color: var(--muted); font-size: .9rem; font-weight: 700; }
+    .timer {
+      width: 68px; height: 68px; border-radius: 50%;
+      display: grid; place-items: center;
+      background: conic-gradient(var(--blue) var(--timer), #e8edf5 0);
+      position: relative;
+      font-size: 1.25rem; font-weight: 900;
+      transition: background .2s;
+    }
+    .timer::before { content: ""; position: absolute; inset: 7px; background: white; border-radius: 50%; }
+    .timer span { position: relative; z-index: 1; }
+    .timer.urgent { color: var(--red); background: conic-gradient(var(--red) var(--timer), #f5e6e8 0); }
+    .progress { height: 8px; background: #e8edf5; border-radius: 999px; overflow: hidden; margin-bottom: 30px; }
+    .progress > div { height: 100%; background: linear-gradient(90deg, var(--blue), #5d7bea); border-radius: inherit; transition: width .3s; }
+    .question { min-height: 78px; margin-bottom: 24px; }
+    .answers { display: grid; gap: 11px; }
+    .answer {
+      width: 100%; border: 2px solid var(--line); border-radius: 16px;
+      background: white; color: var(--ink); padding: 14px 16px;
+      display: grid; grid-template-columns: 36px 1fr; align-items: center;
+      text-align: left; font-weight: 750;
+      transition: border-color .15s, background .15s, transform .12s;
+    }
+    .answer:hover { border-color: #9dadde; background: #f7f9ff; transform: translateY(-1px); }
+    .answer-key {
+      width: 32px; height: 32px; border-radius: 9px; display: grid; place-items: center;
+      background: #edf1ff; color: var(--blue); font-weight: 900;
+    }
+    .typed-row { display: grid; grid-template-columns: 1fr auto; gap: 10px; }
+    .typed-row .primary { width: auto; margin: 0; }
+
+    .result-ring {
+      width: 176px; height: 176px; border-radius: 50%; margin: 26px auto 20px;
+      display: grid; place-items: center;
+      background: conic-gradient(var(--green) var(--score), #e7edf0 0);
+      position: relative;
+    }
+    .result-ring::before { content: ""; position: absolute; inset: 13px; background: white; border-radius: 50%; }
+    .result-score { position: relative; text-align: center; z-index: 1; }
+    .result-score strong { display: block; font-size: 2.35rem; line-height: 1; }
+    .result-score span { color: var(--muted); font-weight: 700; }
+    .result-copy { text-align: center; color: var(--muted); margin-bottom: 24px; }
+    .result-actions { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+    .result-actions .primary { width: auto; margin: 0; }
+
+    dialog { border: 0; padding: 0; border-radius: 22px; width: min(760px, calc(100% - 28px)); max-height: 88vh; box-shadow: var(--shadow); }
+    dialog::backdrop { background: rgba(16, 28, 48, .62); backdrop-filter: blur(4px); }
+    .dialog-head { position: sticky; top: 0; background: white; display: flex; align-items: center; justify-content: space-between; padding: 22px 24px; border-bottom: 1px solid var(--line); z-index: 2; }
+    .close { border: 0; border-radius: 10px; width: 38px; height: 38px; background: #f0f3f8; font-size: 1.3rem; }
+    .review { padding: 8px 24px 24px; }
+    .review-item { padding: 18px 0; border-bottom: 1px solid var(--line); }
+    .review-item:last-child { border: 0; }
+    .review-q { font-weight: 850; margin-bottom: 8px; }
+    .review-line { font-size: .94rem; margin: 3px 0; }
+    .good { color: var(--green); font-weight: 800; }
+    .bad { color: var(--red); font-weight: 800; }
+    .timeout-flash { animation: shake .24s linear 2; }
+    @keyframes shake { 25% { transform: translateX(-4px); } 75% { transform: translateX(4px); } }
+    @media (max-width: 600px) {
+      body { padding: 12px; align-items: start; }
+      .card { border-radius: 22px; padding: 24px 18px; margin: 8px 0; }
+      .rules { grid-template-columns: 1fr; }
+      .typed-row { grid-template-columns: 1fr; }
+      .typed-row .primary { width: 100%; }
+      .question { min-height: 96px; }
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <section id="startScreen" class="card">
+      <p class="eyebrow">30 kérdés • 10 másodperc / kérdés</p>
+      <h1>Általános műveltségi kvíz</h1>
+      <p class="lead">Tedd próbára a tudásod! A kvíz 27 feleletválasztós és 3 rövid, beírandó kérdésből áll.</p>
+      <div class="rules">
+        <div class="rule"><span>30</span>kérdés összesen</div>
+        <div class="rule"><span>10 mp</span>minden kérdésre</div>
+        <div class="rule"><span>1 pont</span>helyes válaszonként</div>
+      </div>
+      <form id="startForm" autocomplete="off">
+        <label for="playerName">Játékos neve</label>
+        <input id="playerName" type="text" maxlength="50" placeholder="Írd be a neved" required>
+        <button class="primary" type="submit">Kvíz indítása</button>
+      </form>
+      <p class="notice">A válaszok véglegesek. Frissítés után a kvíz ugyanonnan folytatódik.</p>
+    </section>
+
+    <section id="quizScreen" class="card hidden" aria-live="polite">
+      <div class="quiz-head">
+        <div>
+          <p id="counter" class="eyebrow">1 / 30. kérdés</p>
+          <div id="playerMeta" class="meta"></div>
+        </div>
+        <div id="timer" class="timer" style="--timer:100%"><span id="seconds">10</span></div>
+      </div>
+      <div class="progress" aria-hidden="true"><div id="progressBar"></div></div>
+      <h2 id="questionText" class="question"></h2>
+      <div id="answers" class="answers"></div>
+    </section>
+
+    <section id="resultScreen" class="card hidden">
+      <p class="eyebrow">Kvíz befejezve</p>
+      <h1 id="resultTitle">Szép munka!</h1>
+      <div id="resultRing" class="result-ring" style="--score:0%">
+        <div class="result-score"><strong id="scoreText">0/30</strong><span id="percentText">0%</span></div>
+      </div>
+      <p id="resultCopy" class="result-copy"></p>
+      <div class="result-actions">
+        <button id="reviewBtn" class="primary" type="button">Helyes válaszok megtekintése</button>
+        <button id="copyBtn" class="secondary" type="button">Eredmény másolása</button>
+      </div>
+      <p class="notice">Ez a próbálkozás ezen a böngészőn lezárult.</p>
+    </section>
+  </main>
+
+  <dialog id="reviewDialog">
+    <div class="dialog-head">
+      <h2>Megoldások</h2>
+      <button id="closeReview" class="close" type="button" aria-label="Bezárás">×</button>
+    </div>
+    <div id="reviewList" class="review"></div>
+  </dialog>
+
+  <script>
+    "use strict";
+
+    const QUESTIONS = [
+      { q: "Melyik Magyarország legnagyobb tava?", options: ["Velencei-tó", "Balaton", "Fertő-tó", "Tisza-tó"], answer: 1 },
+      { q: "Ki írta A Pál utcai fiúk című regényt?", options: ["Jókai Mór", "Móricz Zsigmond", "Molnár Ferenc", "Gárdonyi Géza"], answer: 2 },
+      { q: "Melyik bolygó van a legközelebb a Naphoz?", options: ["Vénusz", "Mars", "Merkúr", "Föld"], answer: 2 },
+      { q: "Melyik évben volt a mohácsi csata?", options: ["1456", "1526", "1606", "1848"], answer: 1 },
+      { q: "Mi Ausztrália fővárosa?", options: ["Sydney", "Melbourne", "Perth", "Canberra"], answer: 3 },
+      { q: "Hány fokos egy derékszög?", options: ["45°", "60°", "90°", "180°"], answer: 2 },
+      { q: "Melyik elem vegyjele az Au?", options: ["Ezüst", "Arany", "Alumínium", "Argon"], answer: 1 },
+      { q: "Ki festette a Mona Lisát?", options: ["Michelangelo", "Raffaello", "Leonardo da Vinci", "Vincent van Gogh"], answer: 2 },
+      { q: "Melyik folyó folyik keresztül Budapesten?", options: ["Tisza", "Dráva", "Rába", "Duna"], answer: 3 },
+      { q: "Hány kontinens van a leggyakoribb földrajzi felosztás szerint?", options: ["5", "6", "7", "8"], answer: 2 },
+      { q: "Melyik szerv pumpálja a vért az emberi testben?", options: ["Tüdő", "Máj", "Szív", "Vese"], answer: 2 },
+      { q: "Mi Japán pénzneme?", options: ["Jüan", "Jen", "Von", "Rúpia"], answer: 1 },
+      { q: "Melyik ország zászlaján látható juharlevél?", options: ["Kanada", "Norvégia", "Svájc", "Ausztria"], answer: 0 },
+      { q: "Ki volt Magyarország első királya?", options: ["Szent László", "Könyves Kálmán", "Szent István", "IV. Béla"], answer: 2 },
+      { q: "Melyik gázból van a legtöbb a Föld légkörében?", options: ["Oxigén", "Szén-dioxid", "Hidrogén", "Nitrogén"], answer: 3 },
+      { q: "Mi a világ legnagyobb óceánja?", options: ["Atlanti-óceán", "Indiai-óceán", "Csendes-óceán", "Jeges-tenger"], answer: 2 },
+      { q: "Melyik hangszernek van általában 88 billentyűje?", options: ["Hegedű", "Zongora", "Fuvola", "Gitár"], answer: 1 },
+      { q: "Melyik állat a legnagyobb ma élő szárazföldi emlős?", options: ["Zsiráf", "Orrszarvú", "Afrikai elefánt", "Víziló"], answer: 2 },
+      { q: "Ki írta a Himnusz szövegét?", options: ["Vörösmarty Mihály", "Petőfi Sándor", "Arany János", "Kölcsey Ferenc"], answer: 3 },
+      { q: "Hány játékos van egyszerre a pályán egy labdarúgócsapatban?", options: ["9", "10", "11", "12"], answer: 2 },
+      { q: "Melyik országban található a gízai nagy piramis?", options: ["Görögország", "Egyiptom", "Mexikó", "India"], answer: 1 },
+      { q: "Melyik nyelven írt eredetileg William Shakespeare?", options: ["Francia", "Latin", "Angol", "Német"], answer: 2 },
+      { q: "Mi a víz kémiai képlete?", options: ["CO₂", "O₂", "NaCl", "H₂O"], answer: 3 },
+      { q: "Melyik a legkisebb prímszám?", options: ["0", "1", "2", "3"], answer: 2 },
+      { q: "Melyik városban található a Colosseum?", options: ["Athén", "Róma", "Párizs", "Madrid"], answer: 1 },
+      { q: "Melyik magyar találmány kötődik Bíró László József nevéhez?", options: ["Golyóstoll", "Gyufa", "Rubik-kocka", "Telefonközpont"], answer: 0 },
+      { q: "Mennyi 12 × 8?", options: ["86", "92", "96", "108"], answer: 2 },
+      { q: "Írd be Magyarország fővárosát!", type: "text", accepted: ["budapest"], display: "Budapest" },
+      { q: "Írd be a Naprendszer legnagyobb bolygójának nevét!", type: "text", accepted: ["jupiter"], display: "Jupiter" },
+      { q: "Írd be, hány oldala van egy hatszögnek!", type: "text", accepted: ["6", "hat"], display: "6 (hat)" }
+    ];
+
+    const STORAGE_KEY = "hu-altalanos-kviz-v1";
+    const LIMIT_MS = 10000;
+    const letters = ["A", "B", "C", "D"];
+    let state = loadState();
+    let timerId = null;
+    let locked = false;
+
+    const el = id => document.getElementById(id);
+
+    function freshState(name) {
+      return { version: 1, name, index: 0, answers: [], status: "active", deadline: Date.now() + LIMIT_MS, startedAt: Date.now() };
+    }
+
+    function loadState() {
+      try {
+        const parsed = JSON.parse(localStorage.getItem(STORAGE_KEY));
+        if (parsed && parsed.version === 1 && ["active", "finished"].includes(parsed.status)) return parsed;
+      } catch (_) {}
+      return null;
+    }
+
+    function saveState() {
+      try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch (_) {}
+    }
+
+    function normalize(value) {
+      return String(value || "").trim().toLocaleLowerCase("hu-HU").normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[.!?]/g, "").trim();
+    }
+
+    function isCorrect(question, value) {
+      if (value === null || value === undefined) return false;
+      if (question.type === "text") return question.accepted.some(a => normalize(a) === normalize(value));
+      return Number(value) === question.answer;
+    }
+
+    function correctDisplay(question) {
+      return question.type === "text" ? question.display : `${letters[question.answer]}) ${question.options[question.answer]}`;
+    }
+
+    function showOnly(screen) {
+      ["startScreen", "quizScreen", "resultScreen"].forEach(id => el(id).classList.toggle("hidden", id !== screen));
+    }
+
+    function boot() {
+      if (!state) {
+        showOnly("startScreen");
+        return;
+      }
+      if (state.status === "finished" || state.index >= QUESTIONS.length) {
+        finishQuiz(false);
+        return;
+      }
+      showOnly("quizScreen");
+      renderQuestion(false);
+    }
+
+    el("startForm").addEventListener("submit", event => {
+      event.preventDefault();
+      const name = el("playerName").value.trim();
+      if (!name) return;
+      state = freshState(name);
+      saveState();
+      showOnly("quizScreen");
+      renderQuestion(false);
+    });
+
+    function renderQuestion(newDeadline = true) {
+      clearInterval(timerId);
+      locked = false;
+      const q = QUESTIONS[state.index];
+      if (!q) return finishQuiz();
+      if (newDeadline || !state.deadline) {
+        state.deadline = Date.now() + LIMIT_MS;
+        saveState();
+      }
+      el("counter").textContent = `${state.index + 1} / ${QUESTIONS.length}. kérdés`;
+      el("playerMeta").textContent = state.name;
+      el("progressBar").style.width = `${(state.index / QUESTIONS.length) * 100}%`;
+      el("questionText").textContent = q.q;
+      el("answers").replaceChildren();
+
+      if (q.type === "text") {
+        const form = document.createElement("form");
+        form.className = "typed-row";
+        form.autocomplete = "off";
+        const input = document.createElement("input");
+        input.type = "text";
+        input.maxLength = 60;
+        input.placeholder = "Írd ide a választ…";
+        input.setAttribute("aria-label", "Válasz");
+        const submit = document.createElement("button");
+        submit.className = "primary";
+        submit.type = "submit";
+        submit.textContent = "Válasz elküldése";
+        form.append(input, submit);
+        form.addEventListener("submit", event => {
+          event.preventDefault();
+          if (input.value.trim()) submitAnswer(input.value.trim());
+        });
+        el("answers").append(form);
+        setTimeout(() => input.focus(), 50);
+      } else {
+        q.options.forEach((option, index) => {
+          const button = document.createElement("button");
+          button.type = "button";
+          button.className = "answer";
+          button.innerHTML = `<span class="answer-key">${letters[index]}</span><span></span>`;
+          button.lastElementChild.textContent = option;
+          button.addEventListener("click", () => submitAnswer(index));
+          el("answers").append(button);
+        });
+      }
+      tick();
+      timerId = setInterval(tick, 100);
+    }
+
+    function tick() {
+      const remaining = Math.max(0, state.deadline - Date.now());
+      const seconds = Math.ceil(remaining / 1000);
+      const pct = `${Math.max(0, Math.min(100, remaining / LIMIT_MS * 100))}%`;
+      el("seconds").textContent = seconds;
+      el("timer").style.setProperty("--timer", pct);
+      el("timer").classList.toggle("urgent", remaining <= 3000);
+      if (remaining <= 0) submitAnswer(null, true);
+    }
+
+    function submitAnswer(value, timedOut = false) {
+      if (locked) return;
+      locked = true;
+      clearInterval(timerId);
+      const q = QUESTIONS[state.index];
+      state.answers.push({ value, correct: isCorrect(q, value), timedOut });
+      state.index += 1;
+      state.deadline = Date.now() + LIMIT_MS;
+      if (state.index >= QUESTIONS.length) state.status = "finished";
+      saveState();
+
+      if (timedOut) {
+        el("quizScreen").classList.add("timeout-flash");
+        setTimeout(() => el("quizScreen").classList.remove("timeout-flash"), 500);
+      }
+      setTimeout(() => state.status === "finished" ? finishQuiz() : renderQuestion(false), timedOut ? 350 : 180);
+    }
+
+    function finishQuiz(persist = true) {
+      clearInterval(timerId);
+      state.status = "finished";
+      state.finishedAt ||= Date.now();
+      if (persist) saveState();
+      const score = state.answers.filter(a => a.correct).length;
+      const percent = Math.round(score / QUESTIONS.length * 100);
+      showOnly("resultScreen");
+      el("resultRing").style.setProperty("--score", `${percent}%`);
+      el("scoreText").textContent = `${score}/${QUESTIONS.length}`;
+      el("percentText").textContent = `${percent}%`;
+      el("resultTitle").textContent = percent >= 80 ? "Kiváló eredmény!" : percent >= 60 ? "Szép munka!" : percent >= 40 ? "Jó próbálkozás!" : "Köszönjük a részvételt!";
+      el("resultCopy").textContent = `${state.name}, ${score} helyes választ adtál a ${QUESTIONS.length} kérdésből.`;
+    }
+
+    function buildReview() {
+      const list = el("reviewList");
+      list.replaceChildren();
+      QUESTIONS.forEach((q, i) => {
+        const answer = state.answers[i] || { value: null, correct: false, timedOut: true };
+        const userDisplay = answer.timedOut || answer.value === null
+          ? "Nem érkezett válasz (lejárt az idő)"
+          : q.type === "text" ? answer.value : `${letters[answer.value]}) ${q.options[answer.value]}`;
+        const item = document.createElement("div");
+        item.className = "review-item";
+        const questionLine = document.createElement("div");
+        questionLine.className = "review-q";
+        questionLine.textContent = `${i + 1}. ${q.q}`;
+        const userLine = document.createElement("div");
+        userLine.className = `review-line ${answer.correct ? "good" : "bad"}`;
+        userLine.textContent = `A te válaszod: ${userDisplay}`;
+        const correctLine = document.createElement("div");
+        correctLine.className = "review-line good";
+        correctLine.textContent = `Helyes válasz: ${correctDisplay(q)}`;
+        item.append(questionLine, userLine, correctLine);
+        list.append(item);
+      });
+    }
+
+    el("reviewBtn").addEventListener("click", () => {
+      buildReview();
+      el("reviewDialog").showModal();
+    });
+    el("closeReview").addEventListener("click", () => el("reviewDialog").close());
+    el("reviewDialog").addEventListener("click", event => {
+      if (event.target === el("reviewDialog")) el("reviewDialog").close();
+    });
+    el("copyBtn").addEventListener("click", async () => {
+      const score = state.answers.filter(a => a.correct).length;
+      const text = `${state.name} – Általános műveltségi kvíz: ${score}/${QUESTIONS.length} pont (${Math.round(score / QUESTIONS.length * 100)}%).`;
+      try {
+        await navigator.clipboard.writeText(text);
+        el("copyBtn").textContent = "Eredmény kimásolva ✓";
+      } catch (_) {
+        window.prompt("Másold ki az eredményt:", text);
+      }
+    });
+
+    window.addEventListener("beforeunload", event => {
+      if (state && state.status === "active") {
+        event.preventDefault();
+        event.returnValue = "";
+      }
+    });
+
+    boot();
+  </script>
+</body>
+</html>
