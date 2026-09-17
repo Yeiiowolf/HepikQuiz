@@ -5,661 +5,101 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Hepik 2026 kvíz</title>
   <style>
-    :root {
-      --ink: #19352b;
-      --muted: #60756a;
-      --paper: #ffffff;
-      --bg1: #eaf5ea;
-      --bg2: #f7f8ed;
-      --blue: #2e6b45;
-      --blue-dark: #1f5033;
-      --green: #2d8a57;
-      --red: #c2414b;
-      --amber: #f59e0b;
-      --line: #d8e6d8;
-      --shadow: 0 22px 70px rgba(35, 83, 52, .16);
-    }
-
-    * { box-sizing: border-box; }
-    html, body { min-height: 100%; }
-    body {
-      margin: 0;
-      color: var(--ink);
-      font: 16px/1.5 Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background:
-        radial-gradient(circle at 10% 12%, rgba(46,107,69,.17), transparent 28rem),
-        radial-gradient(circle at 90% 88%, rgba(133,169,91,.17), transparent 30rem),
-        linear-gradient(135deg, var(--bg1), var(--bg2));
-      display: grid;
-      place-items: center;
-      padding: 24px;
-    }
-
-    button, input { font: inherit; }
-    button { cursor: pointer; }
-    .app { width: min(820px, 100%); }
-    .card {
-      background: rgba(255,255,255,.94);
-      border: 1px solid rgba(255,255,255,.9);
-      border-radius: 28px;
-      box-shadow: var(--shadow);
-      padding: clamp(24px, 5vw, 48px);
-      backdrop-filter: blur(12px);
-    }
-    .hidden { display: none !important; }
-    .eyebrow {
-      color: var(--blue);
-      font-size: .78rem;
-      font-weight: 800;
-      letter-spacing: .12em;
-      text-transform: uppercase;
-      margin: 0 0 8px;
-    }
-    h1, h2 { margin: 0; line-height: 1.14; }
-    h1 { font-size: clamp(2rem, 6vw, 3.4rem); letter-spacing: -.045em; }
-    h2 { font-size: clamp(1.45rem, 4vw, 2rem); letter-spacing: -.025em; }
-    .lead { color: var(--muted); font-size: 1.06rem; margin: 18px 0 26px; }
-    .rules {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 12px;
-      margin: 0 0 28px;
-    }
-    .rule {
-      background: #f2f8f2;
-      border: 1px solid var(--line);
-      border-radius: 16px;
-      padding: 14px;
-      font-weight: 700;
-      font-size: .9rem;
-    }
-    .rule span { display: block; color: var(--blue); font-size: 1.25rem; margin-bottom: 3px; }
-    label { display: block; font-weight: 800; margin-bottom: 8px; }
-    input[type="text"], input[type="number"] {
-      width: 100%;
-      border: 2px solid var(--line);
-      border-radius: 14px;
-      padding: 14px 16px;
-      color: var(--ink);
-      background: white;
-      outline: none;
-      transition: border-color .18s, box-shadow .18s;
-    }
-    input[type="text"]:focus, input[type="number"]:focus { border-color: var(--blue); box-shadow: 0 0 0 4px rgba(49,87,213,.12); }
-    .primary, .secondary {
-      border: 0;
-      border-radius: 14px;
-      padding: 14px 20px;
-      font-weight: 800;
-      transition: transform .12s, background .16s;
-    }
-    .primary { color: white; background: var(--blue); width: 100%; margin-top: 14px; }
-    .primary:hover { background: var(--blue-dark); }
-    .primary:active, .secondary:active { transform: translateY(1px); }
-    .secondary { color: var(--blue); background: #e7f1e7; }
-    .notice { color: var(--muted); font-size: .82rem; margin: 14px 0 0; text-align: center; }
-
-    .quiz-head { display: grid; grid-template-columns: 1fr auto; gap: 18px; align-items: center; margin-bottom: 18px; }
-    .meta { color: var(--muted); font-size: .9rem; font-weight: 700; }
-    .timer {
-      width: 68px; height: 68px; border-radius: 50%;
-      display: grid; place-items: center;
-      background: conic-gradient(var(--blue) var(--timer), #e1eee3 0);
-      position: relative;
-      font-size: 1.25rem; font-weight: 900;
-      transition: background .2s;
-    }
-    .timer::before { content: ""; position: absolute; inset: 7px; background: white; border-radius: 50%; }
-    .timer span { position: relative; z-index: 1; }
-    .timer.urgent { color: var(--red); background: conic-gradient(var(--red) var(--timer), #f5e6e8 0); }
-    .progress { height: 8px; background: #e1eee3; border-radius: 999px; overflow: hidden; margin-bottom: 30px; }
-    .progress > div { height: 100%; background: linear-gradient(90deg, var(--blue), #5e9a70); border-radius: inherit; transition: width .3s; }
-    .question { min-height: 78px; margin-bottom: 24px; }
-    .answers { display: grid; gap: 11px; }
-    .answer {
-      width: 100%; border: 2px solid var(--line); border-radius: 16px;
-      background: white; color: var(--ink); padding: 14px 16px;
-      display: grid; grid-template-columns: 36px 1fr; align-items: center;
-      text-align: left; font-weight: 750;
-      transition: border-color .15s, background .15s, transform .12s;
-    }
-    .answer:hover { border-color: #8bb59a; background: #f0f8f0; transform: translateY(-1px); }
-    .answer-key {
-      width: 32px; height: 32px; border-radius: 9px; display: grid; place-items: center;
-      background: #e7f1e7; color: var(--blue); font-weight: 900;
-    }
-    .typed-row { display: grid; grid-template-columns: 1fr auto; gap: 10px; }
-    .typed-row .primary { width: auto; margin: 0; }
-
-    .result-ring {
-      width: 176px; height: 176px; border-radius: 50%; margin: 26px auto 20px;
-      display: grid; place-items: center;
-      background: conic-gradient(var(--green) var(--score), #e1ece3 0);
-      position: relative;
-    }
-    .result-ring::before { content: ""; position: absolute; inset: 13px; background: white; border-radius: 50%; }
-    .result-score { position: relative; text-align: center; z-index: 1; }
-    .result-score strong { display: block; font-size: 2.35rem; line-height: 1; }
-    .result-score span { color: var(--muted); font-weight: 700; }
-    .result-copy { text-align: center; color: var(--muted); margin-bottom: 24px; }
-    .result-actions { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
-    .result-actions .primary { width: auto; margin: 0; }
-    .online-status { display: flex; align-items: center; justify-content: center; gap: 7px; color: var(--muted); font-size: .84rem; margin-top: 16px; }
-    .online-status::before { content: ""; width: 9px; height: 9px; border-radius: 50%; background: var(--amber); }
-    .online-status.online::before { background: var(--green); }
-    .online-status.error::before { background: var(--red); }
-    .leaderboard-box { margin-top: 30px; padding-top: 26px; border-top: 1px solid var(--line); }
-    .leaderboard-head { display: flex; justify-content: space-between; gap: 12px; align-items: baseline; margin-bottom: 8px; }
-    .leaderboard-note { color: var(--muted); font-size: .85rem; margin: 0 0 14px; }
-    .leaderboard { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
-    .leaderboard li { display: grid; grid-template-columns: 34px 1fr auto; gap: 10px; align-items: center; padding: 11px 12px; background: #f2f8f2; border: 1px solid var(--line); border-radius: 13px; }
-    .leaderboard li.mine { border-color: var(--blue); background: #e8f4e9; }
-    .rank { width: 30px; height: 30px; display: grid; place-items: center; border-radius: 9px; background: white; color: var(--blue); font-weight: 900; }
-    .team-row-name { font-weight: 800; overflow-wrap: anywhere; }
-    .team-row-meta { display: block; color: var(--muted); font-size: .78rem; font-weight: 600; }
-    .team-row-score { color: var(--blue-dark); font-size: 1.05rem; font-weight: 900; white-space: nowrap; }
-
-    dialog { border: 0; padding: 0; border-radius: 22px; width: min(760px, calc(100% - 28px)); max-height: 88vh; box-shadow: var(--shadow); }
-    dialog::backdrop { background: rgba(16, 28, 48, .62); backdrop-filter: blur(4px); }
-    .dialog-head { position: sticky; top: 0; background: white; display: flex; align-items: center; justify-content: space-between; padding: 22px 24px; border-bottom: 1px solid var(--line); z-index: 2; }
-    .close { border: 0; border-radius: 10px; width: 38px; height: 38px; background: #edf3ed; font-size: 1.3rem; }
-    .review { padding: 8px 24px 24px; }
-    .review-item { padding: 18px 0; border-bottom: 1px solid var(--line); }
-    .review-item:last-child { border: 0; }
-    .review-q { font-weight: 850; margin-bottom: 8px; }
-    .review-line { font-size: .94rem; margin: 3px 0; }
-    .good { color: var(--green); font-weight: 800; }
-    .bad { color: var(--red); font-weight: 800; }
-    .neutral { color: var(--blue); font-weight: 800; }
-    .timeout-flash { animation: shake .24s linear 2; }
-    @keyframes shake { 25% { transform: translateX(-4px); } 75% { transform: translateX(4px); } }
-    @media (max-width: 600px) {
-      body { padding: 12px; align-items: start; }
-      .card { border-radius: 22px; padding: 24px 18px; margin: 8px 0; }
-      .rules { grid-template-columns: 1fr; }
-      .typed-row { grid-template-columns: 1fr; }
-      .typed-row .primary { width: 100%; }
-      .question { min-height: 96px; }
-    }
+    :root{--ink:#19352b;--muted:#64776d;--green:#2e6b45;--dark:#1f5033;--line:#d7e6d9;--red:#bd3f48;--gold:#e59b19;--shadow:0 20px 60px rgba(35,83,52,.16)}
+    *{box-sizing:border-box}html,body{min-height:100%}body{margin:0;padding:14px;color:var(--ink);font:16px/1.45 Inter,system-ui,sans-serif;background:radial-gradient(circle at 10% 10%,#cfe5d2,transparent 28rem),linear-gradient(135deg,#eaf5ea,#f8f8ed);display:grid;place-items:start center}
+    button,input{font:inherit}.app{width:min(820px,100%)}.card{margin:8px 0;background:rgba(255,255,255,.96);border:1px solid #fff;border-radius:24px;box-shadow:var(--shadow);padding:clamp(22px,5vw,44px)}.hidden{display:none!important}
+    .eyebrow{margin:0 0 8px;color:var(--green);font-size:.78rem;font-weight:900;letter-spacing:.1em;text-transform:uppercase}h1,h2{margin:0;line-height:1.15}h1{font-size:clamp(2rem,7vw,3.25rem)}h2{font-size:clamp(1.35rem,4.5vw,2rem)}.lead,.muted{color:var(--muted)}.lead{font-size:1.04rem;margin:16px 0 24px}
+    label{display:block;font-weight:850;margin:0 0 7px}input{width:100%;border:2px solid var(--line);border-radius:14px;padding:14px 15px;color:var(--ink);background:#fff;outline:none}input:focus{border-color:var(--green);box-shadow:0 0 0 4px rgba(46,107,69,.12)}
+    button{cursor:pointer;border:0}.primary,.secondary{border-radius:14px;padding:14px 18px;font-weight:900}.primary{width:100%;margin-top:12px;background:var(--green);color:#fff}.primary:hover{background:var(--dark)}.secondary{background:#e8f2e9;color:var(--dark)}
+    .status{display:flex;align-items:center;gap:8px;margin-top:15px;color:var(--muted);font-size:.85rem}.dot{width:9px;height:9px;border-radius:50%;background:var(--gold)}.status.online .dot{background:#2d8a57}.status.error .dot{background:var(--red)}
+    .quiz-head{display:grid;grid-template-columns:1fr auto;gap:16px;align-items:center}.meta{color:var(--muted);font-size:.9rem;font-weight:750}.timer{width:68px;height:68px;border-radius:50%;display:grid;place-items:center;position:relative;background:conic-gradient(var(--green) var(--timer),#e2eee4 0);font-size:1.25rem;font-weight:950}.timer:before{content:"";position:absolute;inset:7px;border-radius:50%;background:#fff}.timer span{position:relative}.timer.urgent{color:var(--red);background:conic-gradient(var(--red) var(--timer),#f5e3e5 0)}
+    .progress{height:8px;margin:18px 0 28px;border-radius:99px;background:#e2eee4;overflow:hidden}.progress div{height:100%;border-radius:inherit;background:linear-gradient(90deg,var(--green),#77a984)}.question{min-height:76px;margin-bottom:22px}.answers{display:grid;gap:10px}
+    .answer{width:100%;display:grid;grid-template-columns:36px 1fr;gap:8px;align-items:center;text-align:left;padding:13px 15px;border:2px solid var(--line);border-radius:15px;background:#fff;color:var(--ink);font-weight:780}.answer:hover{border-color:#82af90;background:#f2f8f2}.key{width:31px;height:31px;border-radius:9px;display:grid;place-items:center;background:#e6f1e8;color:var(--green);font-weight:950}.typed{display:grid;grid-template-columns:1fr auto;gap:9px}.typed .primary{width:auto;margin:0}
+    .waiting{text-align:center;padding:18px 0}.waiting-icon{width:74px;height:74px;margin:0 auto 16px;border-radius:50%;display:grid;place-items:center;background:#e5f2e8;color:var(--green);font-size:2rem;font-weight:950}.ready-count{display:inline-block;margin-top:12px;padding:8px 13px;border-radius:99px;background:#edf5ed;color:var(--dark);font-weight:850}
+    .review-box{margin-top:22px;padding-top:22px;border-top:1px solid var(--line)}.team-answers{list-style:none;margin:14px 0 0;padding:0;display:grid;gap:8px}.team-answers li{display:grid;grid-template-columns:1fr auto;gap:10px;padding:11px 13px;border:1px solid var(--line);border-radius:12px;background:#f6faf6}.team-answers li.winner{border-color:var(--gold);background:#fff8df}.team-name{font-weight:850}.value{font-weight:900;color:var(--dark);text-align:right}.solution{margin-top:16px;padding:14px;border-radius:13px;background:#e7f3e9;color:var(--dark);font-weight:900}
+    .result-ring{width:170px;height:170px;margin:24px auto 18px;border-radius:50%;display:grid;place-items:center;position:relative;background:conic-gradient(var(--green) var(--score),#e2ece4 0)}.result-ring:before{content:"";position:absolute;inset:13px;border-radius:50%;background:#fff}.result-score{position:relative;text-align:center}.result-score strong{display:block;font-size:2.25rem}.result-score span{color:var(--muted);font-weight:800}.center{text-align:center}.leaderboard{list-style:none;margin:18px 0 0;padding:0;display:grid;gap:8px}.leaderboard li{display:grid;grid-template-columns:34px 1fr auto;align-items:center;gap:9px;padding:11px 12px;border:1px solid var(--line);border-radius:13px;background:#f4f9f4}.leaderboard li.mine{border-color:var(--green);background:#e9f4ea}.rank{width:29px;height:29px;border-radius:8px;display:grid;place-items:center;background:#fff;color:var(--green);font-weight:950}.points{font-weight:950;color:var(--dark)}
+    dialog{width:min(760px,calc(100% - 24px));max-height:88vh;border:0;border-radius:20px;padding:0;box-shadow:var(--shadow)}dialog::backdrop{background:rgba(15,32,24,.65)}.dialog-head{position:sticky;top:0;display:flex;justify-content:space-between;align-items:center;padding:19px 22px;background:#fff;border-bottom:1px solid var(--line)}.close{width:38px;height:38px;border-radius:10px;background:#edf3ed;font-size:1.25rem}.review-list{padding:8px 22px 22px}.review-item{padding:15px 0;border-bottom:1px solid var(--line)}.good{color:#247549;font-weight:850}.bad{color:var(--red);font-weight:850}
+    @media(max-width:600px){.card{padding:22px 17px}.typed{grid-template-columns:1fr}.typed .primary{width:100%}.question{min-height:92px}.team-answers li{grid-template-columns:1fr}.value{text-align:left}}
   </style>
 </head>
 <body>
-  <main class="app">
-    <section id="startScreen" class="card">
-      <p class="eyebrow">34 kérdés • 15 másodperc / kérdés</p>
-      <h1>Hepik 2026 kvíz</h1>
-      <p class="lead">Tedd próbára a tudásod! 30 A–D kérdés, 3 beírós találós kérdés és egy közös tippelős forduló vár rád.</p>
-      <div class="rules">
-        <div class="rule"><span>34</span>kérdés összesen</div>
-        <div class="rule"><span>15 mp</span>minden kérdésre</div>
-        <div class="rule"><span>+1 pont</span>a legközelebbi tippért</div>
-      </div>
-      <form id="startForm" autocomplete="off">
-        <label for="teamName">Csapat neve</label>
-        <input id="teamName" type="text" maxlength="50" placeholder="Írd be a csapat nevét" required>
-        <button class="primary" type="submit">Kvíz indítása</button>
-      </form>
-      <p class="notice">A válaszok véglegesek. Frissítés után a kvíz ugyanonnan folytatódik.</p>
-    </section>
-
-    <section id="quizScreen" class="card hidden" aria-live="polite">
-      <div class="quiz-head">
-        <div>
-          <p id="counter" class="eyebrow">1 / 30. kérdés</p>
-          <div id="playerMeta" class="meta"></div>
-        </div>
-        <div id="timer" class="timer" style="--timer:100%"><span id="seconds">10</span></div>
-      </div>
-      <div class="progress" aria-hidden="true"><div id="progressBar"></div></div>
-      <h2 id="questionText" class="question"></h2>
-      <div id="answers" class="answers"></div>
-    </section>
-
-    <section id="resultScreen" class="card hidden">
-      <p class="eyebrow">Kvíz befejezve</p>
-      <h1 id="resultTitle">Szép munka!</h1>
-      <div id="resultRing" class="result-ring" style="--score:0%">
-        <div class="result-score"><strong id="scoreText">0/30</strong><span id="percentText">0%</span></div>
-      </div>
-      <p id="resultCopy" class="result-copy"></p>
-      <div class="result-actions">
-        <button id="reviewBtn" class="primary" type="button">Helyes válaszok megtekintése</button>
-        <button id="copyBtn" class="secondary" type="button">Eredmény másolása</button>
-      </div>
-      <div id="onlineStatus" class="online-status">Kapcsolódás a közös eredménylistához…</div>
-      <div class="leaderboard-box">
-        <div class="leaderboard-head"><h2>Közös eredménylista</h2><span id="teamCount" class="meta"></span></div>
-        <p class="leaderboard-note">A svéd szigetek számára legközelebbi tipp +1 bónuszpontot ér. Az állás új válaszok érkezésekor automatikusan frissül.</p>
-        <ol id="leaderboardList" class="leaderboard"><li><span class="rank">…</span><span class="team-row-name">Eredmények betöltése</span><strong class="team-row-score">–</strong></li></ol>
-      </div>
-      <p class="notice">Ez a próbálkozás ezen a böngészőn lezárult.</p>
-    </section>
-  </main>
-
-  <dialog id="reviewDialog">
-    <div class="dialog-head">
-      <h2>Megoldások</h2>
-      <button id="closeReview" class="close" type="button" aria-label="Bezárás">×</button>
-    </div>
-    <div id="reviewList" class="review"></div>
-  </dialog>
-
-  <script type="module">
-    "use strict";
-
-    const firebaseConfig = {
-      apiKey: "AIzaSyAON0BxynDo29Tx6C7HYtebzz9pBIXvH8k",
-      authDomain: "uzemanyag-a0aab.firebaseapp.com",
-      databaseURL: "https://uzemanyag-a0aab.firebaseio.com",
-      projectId: "uzemanyag-a0aab",
-      storageBucket: "uzemanyag-a0aab.firebasestorage.app",
-      messagingSenderId: "878355618685",
-      appId: "1:878355618685:web:2760b4673237bf5781ca14"
-    };
-
-    const GAME_ROOT = "hepik2026/games/main";
-    let database = null;
-    let databaseApi = null;
-
-    const firebaseReady = (async () => {
-      try {
-        const [appApi, dbApi] = await Promise.all([
-          import("https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js"),
-          import("https://www.gstatic.com/firebasejs/12.19.0/firebase-database.js")
-        ]);
-        databaseApi = dbApi;
-        database = dbApi.getDatabase(appApi.initializeApp(firebaseConfig));
-        return true;
-      } catch (error) {
-        console.warn("Firebase nem érhető el, a kvíz helyi módban fut:", error);
-        setOnlineStatus("Helyi mód – a közös lista nem érhető el", "error");
-        return false;
-      }
-    })();
-
-    const QUESTIONS = [
-      { q: "Melyik Magyarország legmagasabb pontja?", options: ["Dobogó-kő", "Kékes", "Írott-kő", "Nagy-Milic"], answer: 1 },
-      { q: "Ki írta A Pál utcai fiúk című regényt?", options: ["Móricz Zsigmond", "Gárdonyi Géza", "Molnár Ferenc", "Jókai Mór"], answer: 2 },
-      { q: "Ki tervezte a budapesti Országházat?", options: ["Ybl Miklós", "Lechner Ödön", "Pollack Mihály", "Steindl Imre"], answer: 3 },
-      { q: "Ki szerezte a magyar Himnusz zenéjét?", options: ["Erkel Ferenc", "Kodály Zoltán", "Liszt Ferenc", "Bartók Béla"], answer: 0 },
-      { q: "Melyik magyar település híres világszerte a porcelánjáról?", options: ["Hollókő", "Herend", "Tokaj", "Makó"], answer: 1 },
-      { q: "Ki találta fel a Rubik-kockát?", options: ["Bíró László József", "Neumann János", "Rubik Ernő", "Gábor Dénes"], answer: 2 },
-      { q: "Melyik Magyarország legnagyobb tava?", options: ["Velencei-tó", "Fertő tó", "Tisza-tó", "Balaton"], answer: 3 },
-      { q: "Melyik évben zajlott a mohácsi csata?", options: ["1526", "1456", "1541", "1703"], answer: 0 },
-      { q: "Melyik volt Magyarország első nemzeti parkja?", options: ["Bükki", "Hortobágyi", "Aggteleki", "Kiskunsági"], answer: 1 },
-      { q: "Melyik város Ausztrália fővárosa?", options: ["Sydney", "Melbourne", "Canberra", "Perth"], answer: 2 },
-      { q: "Melyik folyó halad át Pozsonyon, Budapesten és Belgrádon is?", options: ["Rajna", "Tisza", "Száva", "Duna"], answer: 3 },
-      { q: "Melyik a Föld legnagyobb forró sivataga?", options: ["Szahara", "Góbi", "Kalahári", "Atacama"], answer: 0 },
-      { q: "Melyik a Föld legnagyobb óceánja?", options: ["Atlanti-óceán", "Csendes-óceán", "Indiai-óceán", "Jeges-tenger"], answer: 1 },
-      { q: "Melyik bolygón hosszabb egy nap, mint egy év?", options: ["Merkúr", "Mars", "Vénusz", "Szaturnusz"], answer: 2 },
-      { q: "Ha Ausztrália kelet–nyugati szélességét a Hold átmérőjével hasonlítjuk össze, melyik a nagyobb?", options: ["A Hold, több mint kétszer akkora", "Pontosan egyformák", "Nem lehet kilométerben összehasonlítani", "Ausztrália, néhány száz kilométerrel szélesebb"], answer: 3 },
-      { q: "Egy kísérleti mérés szerint körülbelül mekkora csúcssebességet érhet el a tüsszentéskor kiáramló levegő?", options: ["Kb. 60 km/h", "Kb. 6 km/h", "Kb. 600 km/h", "Kb. 1600 km/h"], answer: 0 },
-      { q: "Mi az emberi test legkisebb csontja?", options: ["Üllő", "Kengyel", "Kalapács", "Térdkalács"], answer: 1 },
-      { q: "Melyik állatnak van három szíve?", options: ["Delfin", "Pingvin", "Polip", "Teknős"], answer: 2 },
-      { q: "Melyik emlős képes valódi, tartós repülésre?", options: ["Repülőmókus", "Vitorlázó erszényes", "Cukormókus", "Denevér"], answer: 3 },
-      { q: "Melyik a világ legmagasabbra növő fafaja?", options: ["Parti mamutfenyő", "Óriás mamutfenyő", "Hegyi kőris", "Douglas-fenyő"], answer: 0 },
-      { q: "Botanikailag milyen növény a bambusz?", options: ["Fa", "Fűféle", "Páfrány", "Pozsgás"], answer: 1 },
-      { q: "Mi lehet rövid időre körülbelül ötször forróbb a Nap felszínénél?", options: ["Egy működő vulkán lávája", "Egy kohó belseje", "Egy villámcsatorna", "Egy rakétahajtómű lángja"], answer: 2 },
-      { q: "Melyik emlős ürüléke lehet kocka alakú?", options: ["Koala", "Vidra", "Hód", "Vombat"], answer: 3 },
-      { q: "Milyen színűek a flamingófiókák kikeléskor?", options: ["Szürkésfehérek", "Élénkrózsaszínek", "Citromsárgák", "Feketék"], answer: 0 },
-      { q: "Botanikailag melyik növénycsoportba tartozik a földimogyoró?", options: ["Diófélék", "Hüvelyesek", "Gabonafélék", "Rózsafélék"], answer: 1 },
-      { q: "Melyik állat érzékeli az ízeket a lábán található receptorokkal is?", options: ["Csiga", "Hangya", "Pillangó", "Gyík"], answer: 2 },
-      { q: "Mi történik az Eiffel-toronnyal meleg időben?", options: ["Kissé alacsonyabb lesz", "Elfordul észak felé", "Nem változik a mérete", "Kissé magasabb lesz"], answer: 3 },
-      { q: "Melyik az emberi test legnagyobb szerve?", options: ["Bőr", "Máj", "Tüdő", "Vékonybél"], answer: 0 },
-      { q: "Mi volt az első, Föld körüli pályára állított mesterséges hold neve?", options: ["Apollo–11", "Szputnyik–1", "Voyager–1", "Luna–2"], answer: 1 },
-      { q: "Melyik kontinens fekszik mind a négy féltekén?", options: ["Ázsia", "Dél-Amerika", "Afrika", "Európa"], answer: 2 },
-      { q: "Tippelj! A Svéd Statisztikai Hivatal 2013-as felmérése szerint hány szigete van Svédországnak?", type: "number", target: 267570, display: "267 570" },
-      { q: "Találós kérdés: Sanyi anyukájának öt gyereke van: Hétfő, Kedd, Szerda és Csütörtök. Hogy hívják az ötödik gyereket?", type: "text", accepted: ["Sanyi", "Sanyinak", "a Sanyi", "Sanyinak hívják", "Sanyi a neve"], display: "Sanyi" },
-      { q: "Találós kérdés: Egy kórházi szabály szerint senki sem operálhatja meg a saját gyermekét. Egy súlyosan sérült fiúhoz érkező sebész azt mondja: „Nem operálhatom meg.” A sebész nem a fiú apja. Miért?", type: "text", accepted: ["az anyja", "anyja", "anya", "az édesanyja", "édesanyja", "mert az anyja", "mert ő az anyja", "a fiú anyja", "a fiu anyja", "a sebész az anyja", "a sebesz az anyja", "az orvos az anyja", "az orvos a fiú anyja", "az orvos a fiu anyja"], display: "A sebész a fiú édesanyja" },
-      { q: "Találós kérdés: Mi az, ami szárítás közben maga lesz vizes?", type: "text", accepted: ["törölköző", "torolkozo", "törülköző", "torulkozo", "a törölköző", "a torolkozo"], display: "A törölköző" }
-    ];
-
-    const STORAGE_KEY = "hu-altalanos-kviz-v5";
-    const LIMIT_MS = 15000;
-    const BASE_POINTS = QUESTIONS.filter(q => q.type !== "number").length;
-    const MAX_POINTS = BASE_POINTS + 1;
-    const letters = ["A", "B", "C", "D"];
-    let state = loadState();
-    let timerId = null;
-    let locked = false;
-    let leaderboardUnsubscribe = null;
-    let currentTeams = [];
-
-    const el = id => document.getElementById(id);
-
-    function makeTeamId() {
-      if (globalThis.crypto?.randomUUID) return crypto.randomUUID();
-      return `team-${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
-    }
-
-    function freshState(name) {
-      return { version: 1, teamId: makeTeamId(), name, index: 0, answers: [], status: "active", deadline: Date.now() + LIMIT_MS, startedAt: Date.now() };
-    }
-
-    function loadState() {
-      try {
-        const parsed = JSON.parse(localStorage.getItem(STORAGE_KEY));
-        if (parsed && parsed.version === 1 && ["active", "finished"].includes(parsed.status)) return parsed;
-      } catch (_) {}
-      return null;
-    }
-
-    function saveState() {
-      try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch (_) {}
-    }
-
-    function normalize(value) {
-      return String(value || "").trim().toLocaleLowerCase("hu-HU").normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[.!?]/g, "").trim();
-    }
-
-    function isCorrect(question, value) {
-      if (value === null || value === undefined) return false;
-      if (question.type === "text") return question.accepted.some(a => normalize(a) === normalize(value));
-      if (question.type === "number") return false;
-      return Number(value) === question.answer;
-    }
-
-    function correctDisplay(question) {
-      if (question.type === "text") return question.display;
-      if (question.type === "number") return question.display;
-      return `${letters[question.answer]}) ${question.options[question.answer]}`;
-    }
-
-    function getBaseScore() {
-      return state?.answers.filter(a => a.correct === true).length || 0;
-    }
-
-    function getGuess() {
-      const guessIndex = QUESTIONS.findIndex(q => q.type === "number");
-      const value = state?.answers[guessIndex]?.value;
-      return value === null || value === undefined || value === "" ? null : Number(value);
-    }
-
-    function setOnlineStatus(message, kind = "") {
-      const status = el("onlineStatus");
-      if (!status) return;
-      status.textContent = message;
-      status.className = `online-status ${kind}`.trim();
-    }
-
-    async function syncTeam() {
-      if (!state?.teamId) return;
-      if (!await firebaseReady) return;
-      const guess = getGuess();
-      try {
-        await databaseApi.update(databaseApi.ref(database, `${GAME_ROOT}/teams/${state.teamId}`), {
-          name: state.name,
-          baseScore: getBaseScore(),
-          answeredCount: state.answers.length,
-          totalQuestions: QUESTIONS.length,
-          guess: Number.isFinite(guess) ? guess : null,
-          completed: state.status === "finished",
-          startedAt: state.startedAt,
-          finishedAt: state.finishedAt || null,
-          updatedAt: databaseApi.serverTimestamp()
-        });
-        setOnlineStatus("Az eredmény szinkronizálva", "online");
-      } catch (error) {
-        console.warn("Firebase szinkronizálási hiba:", error);
-        setOnlineStatus("A közös eredménylista jelenleg nem érhető el", "error");
-      }
-    }
-
-    function rankTeams(teams) {
-      const validGuesses = teams.filter(team => team.guess !== null && team.guess !== undefined && Number.isFinite(Number(team.guess)));
-      const minDistance = validGuesses.length
-        ? Math.min(...validGuesses.map(team => Math.abs(Number(team.guess) - 267570)))
-        : null;
-      return teams.map(team => {
-        const guess = team.guess === null || team.guess === undefined ? null : Number(team.guess);
-        const distance = Number.isFinite(guess) ? Math.abs(guess - 267570) : null;
-        const bonus = minDistance !== null && distance === minDistance ? 1 : 0;
-        return { ...team, guess, distance, bonus, total: Number(team.baseScore || 0) + bonus };
-      }).sort((a, b) => b.total - a.total || Number(b.completed) - Number(a.completed) || String(a.name).localeCompare(String(b.name), "hu"));
-    }
-
-    function renderLeaderboard() {
-      const list = el("leaderboardList");
-      if (!list) return;
-      const ranked = rankTeams(currentTeams);
-      el("teamCount").textContent = `${ranked.length} csapat`;
-      list.replaceChildren();
-      if (!ranked.length) {
-        const empty = document.createElement("li");
-        empty.innerHTML = '<span class="rank">–</span><span class="team-row-name">Még nincs beküldött eredmény</span><strong class="team-row-score">–</strong>';
-        list.append(empty);
-        return;
-      }
-      ranked.forEach((team, index) => {
-        const item = document.createElement("li");
-        if (team.id === state?.teamId) item.classList.add("mine");
-        const progressText = team.completed ? "kész" : `${team.answeredCount || 0}/${QUESTIONS.length} válasz`;
-        const guessText = Number.isFinite(team.guess)
-          ? `Tipp: ${team.guess.toLocaleString("hu-HU")}${team.bonus ? " • +1 bónusz" : ""} • ${progressText}`
-          : progressText;
-        item.innerHTML = `<span class="rank"></span><span class="team-row-name"></span><strong class="team-row-score"></strong>`;
-        item.children[0].textContent = index + 1;
-        item.children[1].textContent = team.name || "Névtelen csapat";
-        const meta = document.createElement("small");
-        meta.className = "team-row-meta";
-        meta.textContent = guessText;
-        item.children[1].append(meta);
-        item.children[2].textContent = `${team.total}/${MAX_POINTS}`;
-        list.append(item);
-      });
-      renderOwnResult(ranked);
-    }
-
-    async function watchLeaderboard() {
-      if (leaderboardUnsubscribe) return;
-      setOnlineStatus("Kapcsolódás a közös eredménylistához…");
-      if (!await firebaseReady) return;
-      leaderboardUnsubscribe = databaseApi.onValue(databaseApi.ref(database, `${GAME_ROOT}/teams`), snapshot => {
-        const data = snapshot.val() || {};
-        currentTeams = Object.entries(data).map(([id, team]) => ({ id, ...team }));
-        setOnlineStatus("Élő eredménylista", "online");
-        renderLeaderboard();
-      }, error => {
-        console.warn("Firebase olvasási hiba:", error);
-        setOnlineStatus("A közös eredménylista nem tölthető be – ellenőrizd a Rules beállítást", "error");
-      });
-    }
-
-    function showOnly(screen) {
-      ["startScreen", "quizScreen", "resultScreen"].forEach(id => el(id).classList.toggle("hidden", id !== screen));
-    }
-
-    function boot() {
-      if (!state) {
-        showOnly("startScreen");
-        return;
-      }
-      if (state.status === "finished" || state.index >= QUESTIONS.length) {
-        finishQuiz(false);
-        return;
-      }
-      syncTeam();
-      showOnly("quizScreen");
-      renderQuestion(false);
-    }
-
-    el("startForm").addEventListener("submit", event => {
-      event.preventDefault();
-      const name = el("teamName").value.trim();
-      if (!name) return;
-      state = freshState(name);
-      saveState();
-      syncTeam();
-      showOnly("quizScreen");
-      renderQuestion(false);
-    });
-
-    function renderQuestion(newDeadline = true) {
-      clearInterval(timerId);
-      locked = false;
-      const q = QUESTIONS[state.index];
-      if (!q) return finishQuiz();
-      if (newDeadline || !state.deadline) {
-        state.deadline = Date.now() + LIMIT_MS;
-        saveState();
-      }
-      el("counter").textContent = `${state.index + 1} / ${QUESTIONS.length}. kérdés`;
-      el("playerMeta").textContent = state.name;
-      el("progressBar").style.width = `${(state.index / QUESTIONS.length) * 100}%`;
-      el("questionText").textContent = q.q;
-      el("answers").replaceChildren();
-
-      if (q.type === "text" || q.type === "number") {
-        const form = document.createElement("form");
-        form.className = "typed-row";
-        form.autocomplete = "off";
-        const input = document.createElement("input");
-        input.type = q.type === "number" ? "number" : "text";
-        if (q.type === "number") {
-          input.min = "0";
-          input.max = "999999999";
-          input.step = "1";
-          input.inputMode = "numeric";
-          input.placeholder = "Írd be a tippedet…";
-        } else {
-          input.maxLength = 60;
-          input.placeholder = "Írd ide a választ…";
-        }
-        input.setAttribute("aria-label", "Válasz");
-        const submit = document.createElement("button");
-        submit.className = "primary";
-        submit.type = "submit";
-        submit.textContent = "Válasz elküldése";
-        form.append(input, submit);
-        form.addEventListener("submit", event => {
-          event.preventDefault();
-          if (!input.value.trim()) return;
-          submitAnswer(q.type === "number" ? Number(input.value) : input.value.trim());
-        });
-        el("answers").append(form);
-        setTimeout(() => input.focus(), 50);
-      } else {
-        q.options.forEach((option, index) => {
-          const button = document.createElement("button");
-          button.type = "button";
-          button.className = "answer";
-          button.innerHTML = `<span class="answer-key">${letters[index]}</span><span></span>`;
-          button.lastElementChild.textContent = option;
-          button.addEventListener("click", () => submitAnswer(index));
-          el("answers").append(button);
-        });
-      }
-      tick();
-      timerId = setInterval(tick, 100);
-    }
-
-    function tick() {
-      const remaining = Math.max(0, state.deadline - Date.now());
-      const seconds = Math.ceil(remaining / 1000);
-      const pct = `${Math.max(0, Math.min(100, remaining / LIMIT_MS * 100))}%`;
-      el("seconds").textContent = seconds;
-      el("timer").style.setProperty("--timer", pct);
-      el("timer").classList.toggle("urgent", remaining <= 3000);
-      if (remaining <= 0) submitAnswer(null, true);
-    }
-
-    function submitAnswer(value, timedOut = false) {
-      if (locked) return;
-      locked = true;
-      clearInterval(timerId);
-      const q = QUESTIONS[state.index];
-      state.answers.push({ value, correct: q.type === "number" ? null : isCorrect(q, value), timedOut });
-      state.index += 1;
-      state.deadline = Date.now() + LIMIT_MS;
-      if (state.index >= QUESTIONS.length) state.status = "finished";
-      saveState();
-      syncTeam();
-
-      if (timedOut) {
-        el("quizScreen").classList.add("timeout-flash");
-        setTimeout(() => el("quizScreen").classList.remove("timeout-flash"), 500);
-      }
-      setTimeout(() => state.status === "finished" ? finishQuiz() : renderQuestion(false), timedOut ? 350 : 180);
-    }
-
-    function renderOwnResult(ranked = []) {
-      const ownTeam = ranked.find(team => team.id === state?.teamId);
-      const bonus = ownTeam?.bonus || 0;
-      const score = getBaseScore() + bonus;
-      const percent = Math.round(score / MAX_POINTS * 100);
-      el("resultRing").style.setProperty("--score", `${percent}%`);
-      el("scoreText").textContent = `${score}/${MAX_POINTS}`;
-      el("percentText").textContent = `${percent}%`;
-      el("resultTitle").textContent = percent >= 80 ? "Kiváló eredmény!" : percent >= 60 ? "Szép munka!" : percent >= 40 ? "Jó próbálkozás!" : "Köszönjük a részvételt!";
-      const bonusText = bonus ? " A tipped jelenleg a legközelebbi, ezért +1 bónuszpontot kaptál." : "";
-      el("resultCopy").textContent = `${state.name}, jelenleg ${score} pontod van a megszerezhető ${MAX_POINTS} pontból.${bonusText}`;
-    }
-
-    function finishQuiz(persist = true) {
-      clearInterval(timerId);
-      state.status = "finished";
-      state.finishedAt ||= Date.now();
-      if (persist) saveState();
-      showOnly("resultScreen");
-      renderOwnResult();
-      syncTeam();
-      watchLeaderboard();
-    }
-
-    function buildReview() {
-      const list = el("reviewList");
-      list.replaceChildren();
-      QUESTIONS.forEach((q, i) => {
-        const answer = state.answers[i] || { value: null, correct: false, timedOut: true };
-        const userDisplay = answer.timedOut || answer.value === null
-          ? "Nem érkezett válasz (lejárt az idő)"
-          : q.type === "text" ? answer.value
-          : q.type === "number" ? Number(answer.value).toLocaleString("hu-HU")
-          : `${letters[answer.value]}) ${q.options[answer.value]}`;
-        const item = document.createElement("div");
-        item.className = "review-item";
-        const questionLine = document.createElement("div");
-        questionLine.className = "review-q";
-        questionLine.textContent = `${i + 1}. ${q.q}`;
-        const userLine = document.createElement("div");
-        userLine.className = `review-line ${q.type === "number" ? "neutral" : answer.correct ? "good" : "bad"}`;
-        userLine.textContent = `A te válaszod: ${userDisplay}`;
-        const correctLine = document.createElement("div");
-        correctLine.className = "review-line good";
-        correctLine.textContent = `${q.type === "number" ? "Pontos érték" : "Helyes válasz"}: ${correctDisplay(q)}`;
-        item.append(questionLine, userLine, correctLine);
-        list.append(item);
-      });
-    }
-
-    el("reviewBtn").addEventListener("click", () => {
-      buildReview();
-      el("reviewDialog").showModal();
-    });
-    el("closeReview").addEventListener("click", () => el("reviewDialog").close());
-    el("reviewDialog").addEventListener("click", event => {
-      if (event.target === el("reviewDialog")) el("reviewDialog").close();
-    });
-    el("copyBtn").addEventListener("click", async () => {
-      const ownTeam = rankTeams(currentTeams).find(team => team.id === state?.teamId);
-      const score = getBaseScore() + (ownTeam?.bonus || 0);
-      const text = `${state.name} – Hepik 2026 kvíz: ${score}/${MAX_POINTS} pont (${Math.round(score / MAX_POINTS * 100)}%).`;
-      try {
-        await navigator.clipboard.writeText(text);
-        el("copyBtn").textContent = "Eredmény kimásolva ✓";
-      } catch (_) {
-        window.prompt("Másold ki az eredményt:", text);
-      }
-    });
-
-    window.addEventListener("beforeunload", event => {
-      if (state && state.status === "active") {
-        event.preventDefault();
-        event.returnValue = "";
-      }
-    });
-
-    boot();
-  </script>
+<main class="app">
+  <section id="joinScreen" class="card">
+    <p class="eyebrow">33 kérdés • közös játék</p><h1>Hepik 2026 kvíz</h1>
+    <p class="lead">Írd be a csapat nevét, majd várd meg, amíg a játékvezető elindítja a játékot.</p>
+    <form id="joinForm" autocomplete="off"><label for="teamName">Csapat neve</label><input id="teamName" maxlength="50" required placeholder="Például: Zöld Villámok"><button class="primary" type="submit">Csatlakozás</button></form>
+    <div id="joinStatus" class="status"><span class="dot"></span><span>Kapcsolódás a Firebase-hez…</span></div>
+  </section>
+  <section id="lobbyScreen" class="card hidden center"><p class="eyebrow">Váróterem</p><h1 id="lobbyTeam"></h1><p class="lead">Sikeresen csatlakoztatok. A játékvezető hamarosan indítja az első kérdést.</p><div class="waiting-icon">✓</div><div id="lobbyCount" class="ready-count">Csapatok betöltése…</div></section>
+  <section id="quizScreen" class="card hidden"><div class="quiz-head"><div><p id="counter" class="eyebrow"></p><div id="teamMeta" class="meta"></div></div><div id="timer" class="timer" style="--timer:100%"><span id="seconds">15</span></div></div><div class="progress"><div id="progressBar"></div></div><h2 id="questionText" class="question"></h2><div id="answerArea" class="answers"></div></section>
+  <section id="waitingScreen" class="card hidden"><div class="waiting"><p id="waitingEyebrow" class="eyebrow">Válasz elküldve</p><div class="waiting-icon">✓</div><h2 id="waitingTitle">Várunk a többi csapatra</h2><p id="waitingCopy" class="lead">A játékvezető hamarosan megmutatja a megoldást.</p><div id="readyCount" class="ready-count"></div></div><div id="roundReview" class="review-box hidden"><h2>Minden csapat válasza</h2><ul id="teamAnswers" class="team-answers"></ul><div id="solution" class="solution"></div><p class="muted">Beszéljétek meg a megoldást! A következő kérdést a játékvezető indítja.</p></div></section>
+  <section id="resultScreen" class="card hidden"><p class="eyebrow center">A kvíz véget ért</p><h1 class="center">Közös eredménylista</h1><div id="resultRing" class="result-ring" style="--score:0%"><div class="result-score"><strong id="scoreText">0/33</strong><span id="percentText">0%</span></div></div><p id="resultCopy" class="lead center"></p><ol id="leaderboard" class="leaderboard"></ol><div class="center" style="margin-top:18px"><button id="reviewBtn" class="secondary" type="button">Saját válaszok áttekintése</button></div></section>
+</main>
+<dialog id="reviewDialog"><div class="dialog-head"><h2>Saját válaszok</h2><button id="closeReview" class="close" type="button">×</button></div><div id="reviewList" class="review-list"></div></dialog>
+<script type="module">
+"use strict";
+const firebaseConfig={apiKey:"AIzaSyAON0BxynDo29Tx6C7HYtebzz9pBIXvH8k",authDomain:"uzemanyag-a0aab.firebaseapp.com",databaseURL:"https://uzemanyag-a0aab.firebaseio.com",projectId:"uzemanyag-a0aab",storageBucket:"uzemanyag-a0aab.firebasestorage.app",messagingSenderId:"878355618685",appId:"1:878355618685:web:2760b4673237bf5781ca14"};
+const ROOT="hepik2026/games/main",LIMIT=15000,LETTERS=["A","B","C","D"];
+const QUESTIONS=[
+{cat:"Könnyed",q:"Melyik a Föld legnagyobb forró sivataga?",o:["Góbi","Szahara","Kalahári","Atacama"],a:1},
+{cat:"Könnyed",q:"Melyik város Ausztrália fővárosa?",o:["Sydney","Perth","Melbourne","Canberra"],a:3},
+{cat:"Könnyed",q:"Melyik a Föld legnagyobb óceánja?",o:["Csendes-óceán","Atlanti-óceán","Indiai-óceán","Jeges-tenger"],a:0},
+{cat:"Könnyed",q:"Melyik Magyarország legmagasabb pontja?",o:["Írott-kő","Dobogó-kő","Kékes","Nagy-Milic"],a:2},
+{cat:"Könnyed",q:"Ki írta A Pál utcai fiúk című regényt?",o:["Molnár Ferenc","Móricz Zsigmond","Jókai Mór","Gárdonyi Géza"],a:0},
+{cat:"Könnyed",q:"Melyik bolygót nevezik vörös bolygónak?",o:["Vénusz","Mars","Jupiter","Merkúr"],a:1},
+{cat:"Könnyed",q:"Mi a víz kémiai képlete?",o:["CO₂","O₂","NaCl","H₂O"],a:3},
+{cat:"Könnyed",q:"Hány kontinens van a leggyakrabban használt felosztás szerint?",o:["Öt","Hat","Hét","Nyolc"],a:2},
+{cat:"Könnyed",q:"Melyik emlős képes valódi, tartós repülésre?",o:["Denevér","Repülőmókus","Cukormókus","Vitorlázó erszényes"],a:0},
+{cat:"Könnyed",q:"Melyik az emberi test legnagyobb szerve?",o:["Máj","Bőr","Tüdő","Vékonybél"],a:1},
+{cat:"Legközelebbi tipp",type:"guess",q:"A 2013-as hivatalos felmérés szerint hány szigete van Svédországnak?",target:267570,unit:"sziget"},
+{cat:"Legközelebbi tipp",type:"guess",q:"Átlagosan hány kilométerre van a Hold a Földtől?",target:384400,unit:"km"},
+{cat:"Legközelebbi tipp",type:"guess",q:"Hány méter magas az Eiffel-torony a jelenlegi antennával együtt?",target:330,unit:"méter"},
+{cat:"Legközelebbi tipp",type:"guess",q:"Hány csontja van általában egy felnőtt embernek?",target:206,unit:"csont"},
+{cat:"Legközelebbi tipp",type:"guess",q:"Körülbelül hány kilométer a Föld kerülete az Egyenlítőnél?",target:40075,unit:"km"},
+{cat:"Legközelebbi tipp",type:"guess",q:"Hány tagállama van az ENSZ-nek?",target:193,unit:"ország"},
+{cat:"Legközelebbi tipp",type:"guess",q:"Hány méter magas volt eredetileg a gízai Kheopsz-piramis?",target:146.6,unit:"méter",step:"0.1"},
+{cat:"Legközelebbi tipp",type:"guess",q:"Körülbelül hány kilométert tesz meg a fény egyetlen másodperc alatt vákuumban?",target:299792,unit:"km"},
+{cat:"Legközelebbi tipp",type:"guess",q:"Hány kilométer a hivatalos maratoni táv?",target:42.195,unit:"km",step:"0.001"},
+{cat:"Legközelebbi tipp",type:"guess",q:"Hány négyzetkilométer Magyarország területe?",target:93030,unit:"km²"},
+{cat:"Aljas kérdés",q:"Ha végig 90 km/h-val haladsz, mennyi idő alatt teszel meg 60 km-t?",o:["30 perc","40 perc","45 perc","60 perc"],a:1},
+{cat:"Aljas kérdés",q:"Elméletben hányszor kell félbehajtani egy 0,1 mm vastag papírt, hogy a vastagsága elérjen a Holdig?",o:["24-szer","42-szer","100-szor","384-szer"],a:1},
+{cat:"Aljas kérdés",q:"Egy futóversenyen megelőzöd a második helyezettet. Hányadik helyre kerülsz?",o:["Első","Második","Harmadik","Nem dönthető el"],a:1},
+{cat:"Aljas kérdés",q:"Egy akváriumban 10 hal van. Három megfullad. Hány hal marad az akváriumban?",o:["7","3","10","0"],a:2},
+{cat:"Aljas kérdés",q:"Két apa és két fiú horgászik. Mindegyik fog egy halat, összesen mégis csak három halat visznek haza. Hányan voltak?",o:["Ketten","Hárman","Négyen","Öten"],a:1},
+{cat:"Aljas kérdés",q:"Öt gép öt perc alatt öt tárgyat készít. Mennyi idő kell 100 gépnek 100 tárgy elkészítéséhez?",o:["5 perc","20 perc","100 perc","500 perc"],a:0},
+{cat:"Aljas kérdés",q:"Egy kakas tojást toj a háztető gerincére. Merre gurul le a tojás?",o:["Balra","Jobbra","Arra, amerre a szél fúj","Sehova"],a:3},
+{cat:"Aljas kérdés",q:"Hány hónapban van legalább 28 nap?",o:["Egyben","Kettőben","Tizenegyben","Mind a tizenkettőben"],a:3},
+{cat:"Aljas kérdés",q:"Melyik nehezebb: egy kilogramm vas vagy egy kilogramm toll?",o:["A vas","A toll","Ugyanannyi","A páratartalomtól függ"],a:2},
+{cat:"Aljas kérdés",q:"Az orvos három tablettát ad: félóránként kell bevenni egyet. Mennyi idő alatt fogy el mindhárom?",o:["30 perc","1 óra","1,5 óra","2 óra"],a:1},
+{cat:"Beírós",type:"text",q:"Sanyi anyukájának öt gyereke van: Hétfő, Kedd, Szerda és Csütörtök. Hogy hívják az ötödiket?",accepted:["sanyi","sanyinak","sanyinak hívják","sanyi a neve"],display:"Sanyi"},
+{cat:"Beírós",type:"text",q:"Egy szabály szerint senki sem operálhatja meg a saját gyermekét. A sebész egy sérült fiúra néz: „Nem operálhatom meg.” Nem ő a fiú apja. Miért?",accepted:["az anyja","anyja","anya","az édesanyja","édesanyja","mert az anyja","mert ő az anyja","a fiú anyja","a sebész az anyja","az orvos az anyja"],display:"A sebész a fiú édesanyja"},
+{cat:"Beírós",type:"text",q:"Mi az, ami szárítás közben maga lesz vizes?",accepted:["törölköző","törülköző","a törölköző"],display:"A törölköző"}];
+const STORAGE="hepik-2026-team-v6",el=id=>document.getElementById(id);
+let db=null,api=null,control={phase:"lobby",expectedTeams:10},state=load(),shown=-1,timer=null,roundAnswers={},teams={},allAnswers={};
+function load(){try{return JSON.parse(localStorage.getItem(STORAGE))}catch(e){return null}}function save(){localStorage.setItem(STORAGE,JSON.stringify(state))}
+function newId(){return crypto.randomUUID?crypto.randomUUID():"team-"+Date.now()+"-"+Math.random().toString(36).slice(2)}function norm(v){return String(v||"").trim().toLocaleLowerCase("hu-HU").normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[.!?]/g,"").trim()}
+function correct(q,v){if(v===null||v===undefined)return false;if(q.type==="guess")return null;if(q.type==="text")return q.accepted.some(x=>norm(x)===norm(v));return Number(v)===q.a}
+function solution(q){if(q.type==="guess")return fmt(q.target)+" "+q.unit;if(q.type==="text")return q.display;return LETTERS[q.a]+") "+q.o[q.a]}function fmt(v){return Number(v).toLocaleString("hu-HU",{maximumFractionDigits:3})}
+function show(name){["joinScreen","lobbyScreen","quizScreen","waitingScreen","resultScreen"].forEach(x=>el(x).classList.toggle("hidden",x!==name))}
+function status(msg,kind){el("joinStatus").className="status "+(kind||"");el("joinStatus").lastElementChild.textContent=msg}
+const ready=(async()=>{try{const[a,d]=await Promise.all([import("https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js"),import("https://www.gstatic.com/firebasejs/12.19.0/firebase-database.js")]);api=d;db=d.getDatabase(a.initializeApp(firebaseConfig));status("Kapcsolódva","online");return true}catch(e){console.error(e);status("Nem sikerült kapcsolódni a Firebase-hez","error");return false}})();
+async function register(){if(!await ready||!state)return;await api.update(api.ref(db,ROOT+"/teams/"+state.teamId),{teamId:state.teamId,name:state.name,joinedAt:state.joinedAt||api.serverTimestamp(),updatedAt:api.serverTimestamp()})}
+function listen(){api.onValue(api.ref(db,ROOT+"/control"),s=>{const next=s.val()||{phase:"lobby",expectedTeams:10};if(state&&next.sessionId&&state.sessionId!==next.sessionId){localStorage.removeItem(STORAGE);state=null;shown=-1}control=next;if(state)register();route()});api.onValue(api.ref(db,ROOT+"/teams"),s=>{teams=s.val()||{};updateCounts();if(control.phase==="finished")renderResults()});api.onValue(api.ref(db,ROOT+"/answers"),s=>{allAnswers=s.val()||{};if(shown>=0){roundAnswers=allAnswers[shown]||{};updateCounts();if(control.phase==="review")renderRoundReview()}if(control.phase==="finished")renderResults()})}
+function updateCounts(){const tc=Object.keys(teams).length,exp=Number(control.expectedTeams||10),ans=Object.keys(roundAnswers||{}).length;el("lobbyCount").textContent=tc+" / "+exp+" csapat csatlakozott";el("readyCount").textContent=ans+" / "+exp+" csapat válaszolt"}
+function route(){clearInterval(timer);if(!state){show("joinScreen");return}el("lobbyTeam").textContent=state.name;el("teamMeta").textContent=state.name;if(control.phase==="lobby"){shown=-1;show("lobbyScreen");updateCounts();return}if(control.phase==="finished"){show("resultScreen");renderResults();return}const idx=Number(control.questionIndex||0);if(idx!==shown){shown=idx;roundAnswers=allAnswers[idx]||{}}if(control.phase==="review"){show("waitingScreen");renderRoundReview();return}if(state.answers&&state.answers[idx]){showWaiting(false);return}renderQuestion(idx)}
+function renderQuestion(idx){const q=QUESTIONS[idx];show("quizScreen");el("counter").textContent=(idx+1)+" / "+QUESTIONS.length+" • "+q.cat;el("progressBar").style.width=(idx/QUESTIONS.length*100)+"%";el("questionText").textContent=q.q;const area=el("answerArea");area.replaceChildren();if(q.type==="text"||q.type==="guess"){const f=document.createElement("form"),inp=document.createElement("input"),b=document.createElement("button");f.className="typed";inp.type=q.type==="guess"?"number":"text";inp.placeholder=q.type==="guess"?"Írd be a tippedet…":"Írd be a választ…";if(q.type==="guess"){inp.min="0";inp.step=q.step||"1";inp.inputMode="decimal"}b.className="primary";b.type="submit";b.textContent="Válasz elküldése";f.append(inp,b);f.addEventListener("submit",e=>{e.preventDefault();if(!inp.value.trim())return;submit(q.type==="guess"?Number(inp.value):inp.value.trim(),false)});area.append(f);setTimeout(()=>inp.focus(),50)}else q.o.forEach((x,i)=>{const b=document.createElement("button");b.className="answer";b.innerHTML='<span class="key">'+LETTERS[i]+'</span><span></span>';b.lastElementChild.textContent=x;b.addEventListener("click",()=>submit(i,false));area.append(b)});tick();timer=setInterval(tick,100)}
+function tick(){const left=Math.max(0,Number(control.deadline||0)-Date.now());el("seconds").textContent=Math.ceil(left/1000);el("timer").style.setProperty("--timer",Math.min(100,left/LIMIT*100)+"%");el("timer").classList.toggle("urgent",left<=3000);if(left<=0){clearInterval(timer);submit(null,true)}}
+async function submit(value,timedOut){const idx=shown;if(state.answers&&state.answers[idx])return;const q=QUESTIONS[idx],record={teamId:state.teamId,teamName:state.name,value:value,correct:correct(q,value),timedOut:!!timedOut};state.answers=state.answers||{};state.answers[idx]=record;save();showWaiting(timedOut);if(!await ready)return;try{await api.set(api.ref(db,ROOT+"/answers/"+idx+"/"+state.teamId),Object.assign({},record,{submittedAt:api.serverTimestamp()}))}catch(e){el("waitingCopy").textContent="A válasz a telefonon megmaradt, de nem sikerült elküldeni. Ellenőrizd az internetet."}}
+function showWaiting(timedOut){clearInterval(timer);show("waitingScreen");el("roundReview").classList.add("hidden");el("waitingEyebrow").textContent=timedOut?"Lejárt az idő":"Válasz elküldve";el("waitingTitle").textContent="Várunk a többi csapatra";el("waitingCopy").textContent="A játékvezető hamarosan lezárja a válaszokat és megmutatja a megoldást.";updateCounts()}
+function displayAnswer(q,r){if(!r||r.value===null||r.value===undefined)return "Nem válaszolt";if(q.type==="guess")return fmt(r.value)+" "+q.unit;if(q.type==="text")return String(r.value);return LETTERS[r.value]+") "+q.o[r.value]}
+function guessWinners(q,records){const valid=records.filter(r=>r.value!==null&&r.value!==undefined&&Number.isFinite(Number(r.value)));if(!valid.length)return new Set();const min=Math.min(...valid.map(r=>Math.abs(Number(r.value)-q.target)));return new Set(valid.filter(r=>Math.abs(Number(r.value)-q.target)===min).map(r=>r.teamId))}
+function renderRoundReview(){clearInterval(timer);show("waitingScreen");el("waitingEyebrow").textContent="Megoldás";el("waitingTitle").textContent="Nézzétek meg a válaszokat!";el("waitingCopy").textContent="A következő kérdést a játékvezető indítja.";const box=el("roundReview"),list=el("teamAnswers"),q=QUESTIONS[shown],records=Object.values(roundAnswers||{}),winners=q.type==="guess"?guessWinners(q,records):new Set();box.classList.remove("hidden");list.replaceChildren();Object.values(teams).sort((a,b)=>String(a.name).localeCompare(String(b.name),"hu")).forEach(t=>{const r=roundAnswers[t.teamId],li=document.createElement("li");if(winners.has(t.teamId))li.classList.add("winner");const n=document.createElement("span"),v=document.createElement("span");n.className="team-name";v.className="value";n.textContent=t.name;v.textContent=displayAnswer(q,r)+(winners.has(t.teamId)?" ★":"");li.append(n,v);list.append(li)});el("solution").textContent=(q.type==="guess"?"Pontos érték: ":"Helyes válasz: ")+solution(q);updateCounts()}
+function calculate(){const scores={};Object.keys(teams).forEach(k=>scores[k]=0);QUESTIONS.forEach((q,i)=>{const rows=Object.values(allAnswers[i]||{});if(q.type==="guess"){guessWinners(q,rows).forEach(k=>{if(scores[k]!==undefined)scores[k]++})}else rows.forEach(r=>{if(r.correct===true&&scores[r.teamId]!==undefined)scores[r.teamId]++})});return Object.keys(teams).map(k=>({id:k,name:teams[k].name,score:scores[k]||0})).sort((a,b)=>b.score-a.score||a.name.localeCompare(b.name,"hu"))}
+function renderResults(){const ranked=calculate(),mine=ranked.find(x=>x.id===state.teamId)||{score:0},pct=Math.round(mine.score/QUESTIONS.length*100);el("scoreText").textContent=mine.score+"/"+QUESTIONS.length;el("percentText").textContent=pct+"%";el("resultRing").style.setProperty("--score",pct+"%");el("resultCopy").textContent=state.name+", "+mine.score+" pontot szereztetek.";const list=el("leaderboard");list.replaceChildren();ranked.forEach((x,i)=>{const li=document.createElement("li");if(x.id===state.teamId)li.classList.add("mine");li.innerHTML='<span class="rank">'+(i+1)+'</span><strong></strong><span class="points">'+x.score+' pont</span>';li.children[1].textContent=x.name;list.append(li)})}
+function buildOwnReview(){const list=el("reviewList");list.replaceChildren();QUESTIONS.forEach((q,i)=>{const r=state.answers&&state.answers[i],d=document.createElement("div");d.className="review-item";const title=document.createElement("strong");title.textContent=(i+1)+". "+q.q;const own=document.createElement("div");own.className=r&&r.correct===true?"good":"bad";own.textContent="Válaszotok: "+displayAnswer(q,r);const sol=document.createElement("div");sol.className="good";sol.textContent=(q.type==="guess"?"Pontos érték: ":"Helyes válasz: ")+solution(q);d.append(title,own,sol);list.append(d)})}
+el("joinForm").addEventListener("submit",async e=>{e.preventDefault();if(!await ready)return;const name=el("teamName").value.trim();if(!name)return;state={teamId:newId(),name:name,sessionId:control.sessionId||"main",joinedAt:Date.now(),answers:{}};save();await register();show("lobbyScreen")});
+el("reviewBtn").addEventListener("click",()=>{buildOwnReview();el("reviewDialog").showModal()});el("closeReview").addEventListener("click",()=>el("reviewDialog").close());
+(async()=>{if(!await ready)return;listen();if(!state)show("joinScreen")})();
+</script>
 </body>
 </html>
